@@ -1,0 +1,48 @@
+---
+title: 'Valid Palindrome' 
+date: '2024-05-04'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Palindrome is a string that maintains its original spelling when read both forwards and backwards. Find the algorithm that detects one!'
+---
+
+## Introduction
+`Palindrome` is a string(a list of character) that maintains its original spelling when read both forwards and backwards. "radar", "level" and "kayak" can be some of the examples.  
+It can also be a sentence like "Madam, in Eden I'm Adam."
+
+## Problem
+Check if a string is a palindrome or not. Palindromes are case-insensitive, consist of alpha-numeric characters.
+
+## Things you should know
+### A built-in function to tell if a character is a number or an alphabet 
+```python:main.py
+# isalnum()
+print('s'.isalnum()) # True
+print('.'.isalnum()) # False
+```
+
+## Solutions
+### 1. Naïve one (without any thinking)
+```python:main.py
+import re
+
+
+def preprocess(text: str) -> str:
+    return re.sub(r'[^a-zA-Z0-9]', '', text).lower()
+
+
+def is_palindrome(text: str) -> bool:
+    refined_text = list(preprocess(text))
+    while len(refined_text) > 1:
+        if refined_text.pop(0) != refined_text.pop():
+            return False
+    return True
+
+
+print(is_palindrome('A man, a plan, a canal: Panama'))
+```
+
+
+## References
+- [Leetcode Valid Palindrome Problem](https://leetcode.com/problems/valid-palindrome)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)  
