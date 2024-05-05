@@ -37,11 +37,43 @@ def is_palindrome(text: str) -> bool:
         if refined_text.pop(0) != refined_text.pop():
             return False
     return True
-
-
-print(is_palindrome('A man, a plan, a canal: Panama'))
 ```
 
+### 2. Using deque
+You can use `deque`(stands for double-ended queue).  
+By using deque, you can reduce the execution time down to 1/5 of the first solution.
+see [here](https://en.wikipedia.org/wiki/Double-ended_queue) for more information
+
+
+```python:main.py
+import re
+from collections import deque
+
+def preprocess(text: str) -> str:
+    return re.sub(r'[^a-zA-Z0-9]', '', text).lower()
+
+
+def is_palindrome(text: str) -> bool:
+    refined_text = deque(preprocess(text))
+    while len(refined_text) > 1:
+        if refined_text.popleft() != refined_text.pop():
+            return False
+    return True
+```
+
+### 3. Using the 'slicing'
+You can use built-in the slice of list. By setting the step to -1, you can reverse the string.
+```python:main.py
+import re
+
+def preprocess(text: str) -> str:
+    return re.sub(r'[^a-zA-Z0-9]', '', text).lower()
+
+
+def is_palindrome(text: str) -> bool:
+    s = preprocess(text.lower())
+    return str == str[::-1]
+```
 
 ## References
 - [Leetcode Valid Palindrome Problem](https://leetcode.com/problems/valid-palindrome)
