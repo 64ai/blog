@@ -1,0 +1,61 @@
+---
+title: 'Reverse string' 
+date: '2024-05-05'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Palindrome is a string that maintains its original spelling when read both forwards and backwards. Find the algorithm that detects one!'
+---
+
+## Introduction
+reversing a string can be tricky in other programming languages. Let's see how easy and efficeint can this operation be in Python.
+
+## Problem
+Write a function that reverses a list of characters. You have to manipulate the original string withoout any `return` statement.
+
+## Things you should know
+### Two pointers technique
+Assume there is a variable, that indicates a position(index) in a list or an array.  
+You can call this variable a `pointer`, because this variable can be viewed as 'pointing' to a certain element in a list.  
+Obviously, in 'two pointers technique', there are two variables that stores positions of a list.  
+You can manipulate these variables for various tasks.
+
+### Swapping values of two variables
+Instead of introducing a temporary variable, you can directly exchange values of multiple variables like this.
+```python:main.py
+a = 1
+b = 2
+
+a, b = b, a
+
+print(a) # 2
+print(b) # 1
+```
+
+## Solutions
+### 1. Two pointers
+
+```python:main.py
+from typing import List
+
+
+def reverse_string(s: List[str]) -> None:
+    left, right = 0, len(s) - 1
+    while left < right:
+        s[left], s[right] = s[right], s[left]
+        left += 1
+        right -= 1
+```
+
+### 2. Pythonic way
+
+```python:main.py
+from typing import List
+
+
+def reverse_string(s: List[str]) -> None:
+    s.reverse()
+```
+
+## References
+- [Leetcode Valid Palindrome Problem](https://leetcode.com/problems/valid-palindrome)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)  
