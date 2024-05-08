@@ -1,0 +1,75 @@
+---
+title: 'Most Common Word' 
+date: '2024-05-05'
+tags: ['python', 'algorithm', 'Conter', 'typing']
+draft: false
+summary: 'You are given a string and a list of banned words. Find the most frequent word in the list except for the words that are in the banned list.'
+---
+
+## Problem
+You are given a string and a list of banned words. Find the most frequent word in the list except for the words that are in the banned list.
+
+## Things you should know
+### 1. List Comprehension
+[List Comprehension](https://www.w3schools.com/python/python_lists_comprehension.asp) is arguably one of the most powerful features of the Python language.
+
+```python:main.py
+# finding a list of jobs with names consisting of more than one word.
+jobs = ['fire fighter', 'police officer', 'software engineer', 'lawyer', 'teacher']
+filtered = []
+
+for job in jobs:
+    if len(job.split(' ')) > 1:
+        filtered.append(job)
+
+# you can also use 'filter'. make sure to do the type conversion(to list).
+filtered = list(filter(lambda x: len(x.split(' ')) > 1, jobs))
+
+# done easier and more compact with the list comprehension
+filtered = [job for job in jobs if len(job.split(' ')) > 1]
+```
+
+### 2. Counter object
+Utilize the `collections.Counter` function instead of reinventing the wheel.  
+This function conveniently stores the frequency of each element, eliminating the need for custom implementations.  
+The most popular and useful method is `counter.most_common()`. You can specify the number of items you need by using the `n` parameter
+
+```python:counter.py
+from collections import Counter
+
+counter = Counter(['a', 'b', 'a', 'c', 'a', 'b'])
+
+print(counter.most_common()) # [('a', 3), ('b', 2), ('c', 1)]
+print(counter.most_common(n=1)) # [('a', 3)]
+```
+
+### 3. Python typings
+Python is famous for its dynamic typing, allowing flexibility in variable assignment without explicit type declarations.  
+However, starting from Python 3.7, developers can leverage the benefits of a gradually-improving type system, thanks to the introduction of optional type hints.   
+This enhancement gives you better readability, improved code hint in IDEs.  
+Here are some of the basic examples using `typing`
+
+```python:typing.py
+from typing import List, Dict
+
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+print(result)  # Output: Hello, Alice!
+
+names: List[str] = ["Alice", "Bob", "Charlie"]
+scores: Dict[str, int] = {"Alice": 85, "Bob": 90, "Charlie": 80}
+```
+
+## Solutions
+```python:main.py
+def most_common_word(paragraph: str, banned: List[str]):
+    chunks = re.sub(r'[^A-Za-z]+', ' ', paragraph).lower().split(' ')
+    counter = Counter([word for word in chunks if word not in banned and word != ''])
+
+    return counter.most_common(1)[0][0]
+```
+
+## References
+- [Leetcode Most Common Word Problem](https://leetcode.com/problems/most-common-word)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)  
