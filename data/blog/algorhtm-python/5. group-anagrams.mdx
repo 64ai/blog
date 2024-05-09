@@ -1,0 +1,74 @@
+---
+title: 'Group Anagrams' 
+date: '2024-05-07'
+tags: ['python', 'algorithm', 'defaultdict']
+draft: false
+summary: 'An anagram is a word or phrase formed by rearranging the letters of another word or phrase, using all the original letters exactly once. Group these!'
+---
+
+## Introduction
+An anagram is a word or phrase formed by rearranging the letters of another word or phrase, using all the original letters exactly once.  
+Your task is to group these anagrams.
+
+## Things you should know
+### 1. defaultdict
+When you are accessing a `dict` with a key that is not defined, `KeyError` will be raised.  
+More often than not, you do not want this behavior.
+
+```python:ordinary-dict.py
+mini_dictionary = {}
+mini_dictionary['a'] = ['add', 'and']
+mini_dictionary['b'] = ['bird', 'bus']
+
+print(mini_dictionary['a'])
+print(mini_dictionary['b'])
+print(mini_dictionary['c']) # Oops, error!
+```
+
+That is where `collections.defaultdict` comes into play.  
+You can safely access any key you would like without worrying about getting error.
+```python:default-dict.py
+from collections import defaultdict
+mini_dictionary = defaultdict(list)
+mini_dictionary['a'] = ['add', 'and']
+mini_dictionary['b'] = ['bird', 'bus']
+
+print(mini_dictionary['a'])
+print(mini_dictionary['b'])
+print(mini_dictionary['c']) # '[]' will be printed. You are good to go.
+```
+
+## Solutions
+### 1. Naïve one (without any thinking)
+```python:main.py
+from typing import List
+
+
+def group_anagrams(texts: List[str]) -> List[List[str]]:
+    anagrams = {}
+    for text in texts:
+        _key = ''.join(sorted(text))
+        if _key not in anagrams:
+            anagrams[_key] = []
+        anagrams[_key].append(text)
+
+    return [value for value in anagrams.values()]
+```
+
+### 2. Using defaultdict
+```python:main.py
+from typing import List
+from collections import defaultdict
+
+
+def group_anagrams(texts: List[str]) -> List[List[str]]:
+    anagrams = defaultdict(list)
+    for text in texts:
+        anagrams[''.join(sorted(text))].append(text)
+
+    return [value for value in anagrams.values()]
+```
+
+## References
+- [Leetcode Group Anagram Problem](https://leetcode.com/problems/group-anagrams)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)  
