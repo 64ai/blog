@@ -1,0 +1,114 @@
+---
+title: 'Longest Palindromic Substring'
+date: '2024-05-08'
+tags: ['python', 'algorithm', 'palindrome', 'two pointers']
+draft: false
+summary: 'An anagram is a word or phrase formed by rearranging the letters of another word or phrase, using all the original letters exactly once. Group these!'
+---
+
+## Introduction
+
+As you saw in [valid palindrome](/blog/algorithm-python/valid-palindrome) problem, a `palindrome` is a string(a list of character) that maintains its original spelling when read both forwards and backwards.
+Your task in this problem is to identify the longest substring that forms a palindrome.
+
+## Things you should know
+
+### 1. array slicing
+```python:slicing.py
+# Extract elements from index 1 to 3 (exclusive)
+numbers = [1, 2, 3, 4, 5]
+sliced_numbers = numbers[1:4]
+print(sliced_numbers)  # Output: [2, 3, 4]
+
+# Extract every second element
+numbers = [1, 2, 3, 4, 5]
+step_sliced_numbers = numbers[::2]  
+print(step_sliced_numbers)  # Output: [1, 3, 5]
+
+# Reverse the list
+numbers = [1, 2, 3, 4, 5]
+reversed_numbers = numbers[::-1]  
+print(reversed_numbers)  # Output: [5, 4, 3, 2, 1]
+
+# Extract elements from the third-to-last to the second-to-last
+numbers = [1, 2, 3, 4, 5]
+negative_index_numbers = numbers[-3:-1]  
+print(negative_index_lst)  # Output: [3, 4]
+```
+
+
+### 2. range function
+
+In Python, when you're working with lists, the `range()` function is a common choice.  
+That's because `range()` returns a range object(one of immutable iterable objects), which is known for its memory efficiency.
+```python:slicing.py
+for num in range(10):
+    print(10) # prints 0~9 in each new line
+
+for num in range(0, 10, 2):
+    print(10) # prints even numbers between 0 and 9
+```
+
+### 3. max function
+Often times you will want to know the maximum(or minumum) between the values.  
+You can achieve this with built-in `max()` or `min()` function.
+```python:max-min.py
+# general case
+_max = max('a', 'bb','cccc')
+print(_max) # a
+
+# specifying different key
+_max = max('a', 'bb','cccc', key=len)
+print(_max) # cccc (longest length)
+```
+## Solutions
+
+### 1. Naïve one (without any thinking)
+
+This solution seems rather brute-force. It might fail the test due to timeout.  
+Any toddler can come up with this solution. You wouldn't want that.
+
+```python:main.py
+def is_palindrome(text: str) -> bool:
+    return text == text[::-1]
+
+
+def naive_longest_palindromic_substring(text: str) -> str:
+    longest_palindrome = text[0]
+
+    for i, char in enumerate(text):
+        substr = text[i:]
+        if is_palindrome(substr):
+            if len(longest_palindrome) < len(substr):
+                longest_palindrome = substr
+            continue
+    return longest_palindrome
+```
+
+### 2. Sliding window with 2 pointers.
+
+```python:main.py
+def is_palindrome(text: str) -> bool:
+    return text == text[::-1]
+
+
+def expand(text: str, left: int, right: int) -> str:
+    while left >= 0 and right <= len(text) - 1 and text[left] == text[right]:
+        left -= 1
+        right += 1
+    return text[left + 1:right]
+
+
+def longest_palindromic_substring(text: str) -> str:
+    if len(text) < 2 or is_palindrome(text):
+        return text
+    result = ''
+    for i in range(len(text) - 1):
+        result = max(result, expand(text, i, i + 1), expand(text, i, i + 2), key=len)
+    return result
+```
+
+## References
+
+- [Leetcode Longest Palindromic Substring Problem](https://leetcode.com/problems/longest-palindromic-substring)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
