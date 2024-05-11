@@ -1,0 +1,85 @@
+---
+title: 'Two Sum'
+date: '2024-05-11'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Find two element index where sum of two elements equals to the target'
+---
+
+## Introduction
+You will be given a list of number and the target.  
+Find two element index where sum of two elements equals to the target.  
+You can assume there is `always` one answer.
+See example below.
+```python
+assert naive_two_sum([2, 7, 11, 15], 9) == [0, 1]
+assert naive_two_sum([3, 2, 4], 6) == [1, 2]
+assert naive_two_sum([3, 3], 6) == [0, 1]
+```
+
+## Things you should know
+### 1. enumerate function
+The `enumerate()` function in Python takes an iterable (**not necessarily a list**) and returns an enumerate object. Each element of the enumerate object contains a tuple in the format of (index, original_item), where index represents the position of the item in the iterable, and original_item is the actual element from the iterable.
+```python:enumerate.py
+people = ['alex', 'sam', 'julia', 'tom', 'joe']
+
+for index, person in enumerate(people):
+    print(index, person)
+
+# result
+# 0 alex
+# 1 sam
+# 2 julia
+# 3 tom
+# 4 joe
+```
+## Solutions
+
+### 1. Naïve one (brute force)
+Well.. You can do it better for sure, can't you?
+```python:main.py
+def naive_two_sum(nums: List[int], target: int) -> List[int]:
+    for i, num1 in enumerate(nums):
+        for j, num2 in enumerate(nums):
+            if i == j:
+                continue
+            if num1 + num2 == target:
+                return [i, j]
+    return []
+```
+
+### 2. Slightly improved one
+This method is more than twice as fast as the first one because `in` operator is faster than traversing each element in the list. But time complexity is still **$$O(n^2)$$**, though.
+```python:main.py
+def two_sum(nums: List[int], target: int) -> List[int]:
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in nums[i + 1:]:
+            return [i, nums[i + 1:].index(complement) + i + 1]
+
+    return []
+```
+
+### 3. Hash mapping
+You can optimize for speed by trading off a bit of memory space. One approach is to store the difference (`diff`) between the target and each element along with its corresponding position (index).  
+Then, while iterating through the list, you can check if the current element's complement (i.e., the difference) exists in the mapping.  
+Finally, time complexity is **$$O(n)$$**.
+
+```python:main.py
+def two_sum(nums: List[int], target: int) -> List[int]:
+    mapping = dict()
+    for index, num in enumerate(nums):
+        complement = target - num
+        if complement in mapping:
+            if mapping[complement] != index:
+                return [index, mapping[complement]]
+        else:
+            mapping[num] = index
+
+    return []
+```
+
+## References
+
+- [Leetcode Two Sum Problem](https://leetcode.com/problems/two-sum)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
