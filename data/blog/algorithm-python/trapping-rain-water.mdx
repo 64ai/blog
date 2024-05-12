@@ -1,0 +1,76 @@
+---
+title: 'Trapping Rain Water'
+date: '2024-05-12'
+tags: ['python', 'algorithm', 'two pointers', 'stack']
+draft: false
+summary: 'This problem involves finding the total volume of water trapped between walls in a given landscape. Solve this!'
+---
+
+## Introduction
+
+
+## Things you should know
+### 1. destructuring
+Instead of assigning each value to individual variables separately, there's a method that allows you to do it simultaneously. It's called `destructuring`. Here's how it works:
+```python:enumerate.py
+# Instead of this
+a = 5
+b = 3
+
+# You can do this
+a, b = 5, 3
+```
+
+## Solutions
+
+### 1. Two pointers
+
+This approach is quite intuitive and simple. It starts by positioning two pointers at the opposite ends of the array and gradually moving them closer to each other. As they advance, the algorithm calculates the volume of trapped water by comparing the maximum heights encountered on the left and right sides. The time complexity is 
+**$$O(n)$$** since it iterates through each element of the array once, making it quite efficient.
+
+```python:main.py
+def trapping_rain_water3(heights: List[int]) -> int:
+    volume = 0
+    left, right = 0, len(heights) - 1
+    max_left, max_right = heights[left], heights[right]
+
+    while left < right:
+        max_left, max_right = (max(max_left, heights[left]),
+                               max(max_right, heights[right]))
+        if max_left <= max_right:
+            volume += max_left - heights[left]
+            left += 1
+        else:
+            volume += max_right - heights[right]
+            right -= 1
+
+    return volume
+```
+
+### 2. Stacks
+This solution utilizes a stack to keep track of indices as it iterates through the heights array. The time complexity is also **$$O(n)$$** .
+```python:main.py
+from typing import List
+
+
+def trapping_rain_water(heights: List[int]) -> int:
+    stack = []
+    volume = 0
+
+    for i, height in enumerate(heights):
+        while stack and height >= heights[stack[-1]]:
+            top = stack.pop()  # top index
+            if len(stack) == 0:
+                break
+            width = i - stack[-1] - 1
+            height = min(heights[stack[-1]], heights[i]) - heights[top]
+            volume += width * height
+        stack.append(i)
+
+    return volume
+```
+
+## References
+
+- [Leetcode Trapping Rain Water Problem](https://leetcode.com/problems/trapping-rain-water)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
