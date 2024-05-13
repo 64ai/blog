@@ -1,0 +1,78 @@
+---
+title: 'Three Sum'
+date: '2024-05-13'
+tags: ['python', 'algorithm', 'two pointers']
+draft: false
+summary: 'When given an array of integers, find three elements that sum up to zero.'
+---
+
+## Introduction
+When given an array of integers, find three elements that sum up to zero..  
+
+## Solutions
+
+### 1. Brute Force
+When use exhaustively iterate (nearly) all combinations, you can manage to solve the problem in **$$O(n^3)$$** time.
+```python:main.py
+from typing import List
+def three_sum(numbers: List[int]) -> List[List[int]]:
+    answer = []
+    numbers.sort()
+
+    for i in range(len(numbers) - 2):
+        # skip same element
+        if i > 0 and numbers[i] == numbers[i - 1]:
+            continue
+        for j in range(i + 1, len(numbers) - 1):
+            # skip same element
+            if j > i + 1 and numbers[j] == numbers[j - 1]:
+                continue
+            for k in range(j + 1, len(numbers)):
+                # skip same element
+                if k > j + 1 and numbers[k] == numbers[k - 1]:
+                    continue
+                if numbers[i] + numbers[j] + numbers[k] == 0:
+                    answer.append([numbers[i], numbers[j], numbers[k]])
+
+    return answer
+```
+
+### 2. Two pointers
+Instead of exploring every combination, there's room for improvement here. Using two pointers, we can reduce the time complexity to **$$O(n^2)$$** . The provided Python code implements this approach.
+
+
+
+```python:main.py
+def three_sum(nums: List[int]) -> List[List[int]]:
+    answer = []
+    numbers.sort()
+
+    for i in range(len(numbers) - 2):
+        if i > 0 and numbers[i] == numbers[i - 1]:
+            continue
+
+        left, right = i + 1, len(numbers) - 1
+        while left < right:
+            sum_result = numbers[i] + numbers[left] + numbers[right]
+            if sum_result < 0:
+                left += 1
+            elif sum_result > 0:
+                right -= 1
+            else:
+                # sum == 0
+                answer.append([numbers[i], numbers[left], numbers[right]])
+                while left < right and numbers[left] == numbers[left + 1]:
+                    left += 1
+                while left < right and numbers[right] == numbers[right - 1]:
+                    right -= 1
+                left += 1
+                right -= 1
+    return answer
+```
+
+
+
+## References
+
+- [Leetcode Three Sum Problem](https://leetcode.com/problems/trapping-rain-water)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
