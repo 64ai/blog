@@ -2,6 +2,14 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "[mdx]": {
-    "editor.quickSuggestions": false
-  }
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "cSpell.enabled": true,
+  "cSpell.enableFiletypes": [
+    "mdx"
+  ]
 }
