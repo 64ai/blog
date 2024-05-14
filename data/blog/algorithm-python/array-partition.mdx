@@ -1,0 +1,62 @@
+---
+title: 'Array Partition'
+date: '2024-05-14'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Find the maximum sum of pairs (a, b) where the minimum of (a, b) is maximized.'
+---
+
+## Introduction
+Find the maximum sum of pairs (a, b) where the minimum of (a, b) is maximized.
+
+## Solutions
+To maximize the sum, sorting the numbers in ascending order is beneficial, as it ensures that the larger values are paired together, potentially yielding a higher sum.
+### 1. Naïve solution
+```python:main.py
+from typing import List
+
+
+def array_partition(numbers: List[int]) -> int:
+    numbers.sort()
+    answer = 0
+
+    for i in range(0, len(numbers), 2):
+        answer += min(numbers[i], numbers[i + 1])
+    return answer
+```
+
+### 2. With a little trick
+Did you catch that? In a sorted list, `min(a, b)` always picks up the first one.  
+Therefore, you can skip the comparison part and simply pick the first number.
+
+```python:main.py
+from typing import List
+
+
+def array_partition(numbers: List[int]) -> int:
+    numbers.sort()
+    answer = 0
+
+    for i in range(0, len(numbers), 2):
+        answer += numbers[i]
+    return answer
+```
+
+### 3. "Pythonic way"
+Look at the elegance and simplicity of this solution, the beauty of `Pythonic` coding practices.  
+This concise approach elegantly extracts every other element from the sorted list and sums them effortlessly.
+
+```python:main.py
+from typing import List
+
+
+def array_partition(numbers: List[int]) -> int:
+    return sum(sorted(numbers[::2]))
+```
+
+
+
+## References
+
+- [Leetcode Array Partition Problem](https://leetcode.com/problems/array-partition)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
