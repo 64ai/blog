@@ -1,0 +1,67 @@
+---
+title: 'Product of Array Except Self'
+date: '2024-05-15'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Given a list of integers, return a new list where each element is the product of all elements in the original list except for the element at the same index.'
+---
+
+## Introduction
+Given a list of integers, return a new list where each element is the product of all elements in the original list except for the element at the same index.  
+You **must not** use division(`/`) operator.  Optimize your algorithm so that the time complexity is **$$O(n)$$** 
+
+## Things you should know
+### 1. creating a list of size n with every element being k
+While you can use `range()` and append the desired number of elements to the list, there's a simpler way to achieve this.
+```python:main.py
+# making a list of size 10 where every element is 3
+example1 = [3] * 10
+
+# making a list of size 5 where every element is 1
+example2 = [1] * 5
+```
+
+## Solutions
+Remember, you cannot use division, and simply iterating through the list and multiplying each item won't satisfy the time complexity requirement.
+For example, when `[1, 2, 3, 4]` is given. The answer should be `[24, 12, 8, 6]`.  
+Let's see how we can solve this problem.
+
+### 1. dividing left and right parts
+1. first element: `2(right) * 3(right) * 4(right)`. all of them are at the right side of `1`.
+2. second element: `1(left) * 3(right) * 4(right)`. 
+3. third element: `1(left) * 2(left) * 4(right)`. 
+4. fourth element: `1(left) * 2(left) * 3(left)`. all of them are at the left side of `4`.
+
+```python:main.py
+from typing import List
+
+
+def product_of_array_except_self(numbers: List[int]) -> List[int]:
+    # initialize the answer list to which we will multiply
+    answer = [1] * len(numbers)
+
+    multiplier = 1
+
+    # multiply left side elements first
+    for i in range(len(numbers)):
+        answer[i] *= multiplier
+        multiplier *= numbers[i]
+
+    # resetting the multiplier
+    multiplier = 1
+
+    # and then multiply right side elements
+    for i in range(len(numbers) - 1, -1, -1):
+        answer[i] *= multiplier
+        multiplier *= numbers[i]
+
+    return answer
+```
+
+
+
+
+## References
+
+- [Leetcode Product of Array Except Self Problem](https://leetcode.com/problems/product-of-array-except-self)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
