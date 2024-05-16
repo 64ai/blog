@@ -1,0 +1,74 @@
+---
+title: 'Best Time to Buy and Sell Stock'
+date: '2024-05-16'
+tags: ['python', 'algorithm']
+draft: false
+summary: 'Given a list of integers, return a new list where each element is the product of all elements in the original list except for the element at the same index.'
+---
+
+## Introduction
+Given a list of integers, return a new list where each element is the product of all elements in the original list except for the element at the same index.
+
+## Things you should know
+### 1. maximum value
+There are a few ways to indicate that a value is very large. `math.inf` and `float('inf')` can be used to express the concept of infinity. These values will always be greater than any literal `int` value.
+```python:inf.py
+import math
+
+
+print(math.inf)  # inf
+print(float('inf'))  # inf
+print(math.inf * 2)  # inf
+print(math.inf * -1)  # -inf
+print(math.inf + 1 > math.inf)  # True
+print(math.inf == float('inf'))  # True
+```
+Whereas `sys.maxsize` literally represents the maximum size of an int. If your machine is 64-bit, it will be the same as `2 ** 63 - 1`. On a 32-bit machine, it will be `2**31-1`. You should notice that `math.inf` is always greater than `sys.maxsize`.
+
+```python:maxsize.py
+import sys
+
+
+print(sys.maxsize)  # 9223372036854775807
+print(sys.maxsize == (2**63 - 1))  # True
+print(float('inf') > sys.maxsize)  # True
+```
+## Solutions
+### 1. Brute force
+Well, You can always try the easiest approach and optimize from there. Time complexity is **$$O(n^2)$$** 
+```python:main.py
+from typing import List
+
+
+def best_time_to_buy_and_sell_stock(prices: List[int]) -> int:
+    profit = 0
+    for i in range(len(prices)):
+        # skip when found the same value.
+        if i > 0 and prices[i] >= prices[i - 1]:
+            continue
+        for j in range(i, len(prices)):
+            profit = max(profit, prices[j] - prices[i])
+    return profit
+```
+
+### 2. update minimum then calculate maximum (Greedy algorithm)
+It turns out, you can keep updating the local minimum and compare the maximum profit while iterating through the list. Time complexity is **$$O(n)$$** 
+```python:main.py
+import math
+from typing import List
+
+
+def best_time_to_buy_and_sell_stock(prices: List[int]) -> int:
+    minimum = math.inf
+    profit = 0
+    for price in prices:
+        minimum = min(minimum, price)
+        profit = max(profit, price - minimum)
+    return profit
+```
+
+
+## References
+
+- [Leetcode Best Time to Buy and Sell Stock Problem](https://leetcode.com/problems/best-time-to-buy-and-sell-stock)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
