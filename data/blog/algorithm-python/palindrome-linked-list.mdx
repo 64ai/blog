@@ -1,0 +1,84 @@
+---
+title: 'Palindrome Linked List'
+date: '2024-05-16'
+tags: ['python', 'algorithm', 'linked list']
+draft: false
+summary: 'Given a linked list, determine whether it forms a palindrome.'
+---
+
+## Introduction
+Given a linked list, determine whether it forms a palindrome. In the context of a linked list, this means that the values of the nodes are symmetrical when read from the beginning to the end and from the end to the beginning.
+The interface is described below.
+```python:list_node.py
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode']=None):
+        self.val = val
+        self.next = next
+
+# This will form a linked list where the order is 1 -> 2 -> 2 -> 1
+fourth = ListNode(val=1)
+third = ListNode(val=2, next=fourth)
+second = ListNode(val=2, next=third)
+first = ListNode(val=1, next=second)
+```
+
+## Things you should know
+### 1. Runner Technique
+
+The **runner technique** is a common approach used in linked list problems to efficiently solve problems involving linked lists, especially for tasks like detecting cycles, finding midpoints, or solving **_palindrome-related problems_**. It involves using two pointers that traverse the list at different speeds: one pointer moves one node at a time (the `slow` pointer), while the other moves two nodes at a time (the `fast` pointer).
+
+## Solutions
+Iterate through the linked list, append each node value(`node.val`) in the deque.  
+
+### 1. Using deque
+Though this solution gets the job done in **$$O(n)$$** , it seems a little bit hacky, doesn't it?
+```python:using_deque.py
+from typing import Optional, Deque
+from collections import deque
+
+
+def palindrome_linked_list(head: ListNode) -> bool:
+    q: Deque = deque()  # used deque because popleft() 
+    node = head
+    while node is not None:
+        q.append(node.val)
+        node = node.next
+    while len(q) > 1:
+        if q.popleft() != q.pop():
+            return False
+    return True
+```
+
+### 2. Using the runner technique
+Pushing elements into the first half of the linked list, and then comparing it with the second half.
+```python:runner_technique.py
+from typing import Optional
+
+# Definition for singly-linked list.
+def palindrome_linked_list(head: ListNode) -> bool:
+    # Use the runner technique to push the first half of the list onto a stack
+    while fast and fast.next:
+        stack.append(slow.val)
+        slow = slow.next
+        fast = fast.next.next
+    
+    # If the list has an odd number of nodes, skip the middle node
+    if fast:
+        slow = slow.next
+    
+    # Compare the second half of the list with the elements in the stack
+    while slow:
+        if slow.val != stack.pop():
+            return False
+        slow = slow.next
+    
+    return True
+```
+
+## References
+
+- [Leetcode Palindrome Linked List Problem](https://leetcode.com/problems/palindrome-linked-list)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
