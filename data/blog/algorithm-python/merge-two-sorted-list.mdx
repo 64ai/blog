@@ -1,0 +1,75 @@
+---
+title: 'Merge Two Sorted Lists'
+date: '2024-05-17'
+tags: ['python', 'algorithm', 'recursion', 'linked list']
+draft: false
+summary: 'Given a two sorted linked list, merge these into a new linked list.'
+---
+
+## Introduction
+Given a two sorted linked list, merge these into a new linked list.
+The interface is described below.
+```python:list_node.py
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode']=None):
+        self.val = val
+        self.next = next
+
+# This will form a linked list where the order is 1 -> 2 -> 2 -> 1
+fourth = ListNode(val=1)
+third = ListNode(val=2, next=fourth)
+second = ListNode(val=2, next=third)
+first = ListNode(val=1, next=second)
+```
+
+## Solutions
+### 1. Naïve solution
+Although this solution is straightforward and intuitive, it contains redundant parts.  
+
+```python:main.py
+def merge_two_sorted_list(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+    if not list1 and not list2:
+        return None
+
+    dummy = ListNode()
+    cursor = dummy
+
+    while list1 and list2:
+        if list1.val <= list2.val:
+            cursor.next = list1
+            list1 = list1.next
+        else:
+            cursor.next = list2
+            list2 = list2.next
+        cursor = cursor.next
+
+    if list1:
+        cursor.next = list1
+    elif list2:
+        cursor.next = list2
+
+    return dummy.next
+```
+
+### 2. Using recursion
+This recursive solution is elegant and concise, leveraging the recursive call stack to handle the merging process. The swap ensures that list1 always holds the smaller current node, simplifying the merge logic. However, caution must be exercised regarding potential memory issues.
+```python:main.py
+from typing import List
+
+def recurse_merge_two_sorted_list(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+    # swap so that list1 is smaller
+    if not list1 or (list2 and list1.val > list2.val):
+        list1, list2 = list2, list1
+    if list1:
+        list1.next = recurse_merge_two_sorted_list(list1.next, list2)
+    return list1
+```
+
+
+## References
+
+- [Leetcode Merge Two Sorted Lists Problem](https://leetcode.com/problems/merge-two-sorted-lists)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
