@@ -1,0 +1,137 @@
+---
+title: 'Add Two Numbers'
+date: '2024-05-19'
+tags: ['python', 'algorithm', 'linked list']
+draft: false
+summary: 'Given two linked lists, add two linked lists in node-wise and return the resulting list'
+---
+
+## Introduction
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+
+```python:list_node.py
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode']=None):
+        self.val = val
+        self.next = next
+
+# This will form a linked list where the order is 1 -> 2 -> 2 -> 1
+fourth = ListNode(val=1)
+third = ListNode(val=2, next=fourth)
+second = ListNode(val=2, next=third)
+first = ListNode(val=1, next=second)
+```
+
+## Things you should know
+### 1. divmod
+Very useful `divmod` function returns both the quotient and remainder in a single operation.
+```python:divmod_example.py
+# Example of using divmod
+quotient, remainder = divmod(15, 4)
+
+print("Quotient:", quotient)  # Output: 3
+print("Remainder:", remainder)  # Output: 3
+```
+
+### 2. conditional expression
+One of my favorite functions in JavaScript is [the conditional operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator), also known as the ternary operator. It allows for writing simpler code compared to using if-else statements
+```javascript:ternary_operator.js
+// Define two numbers
+const a = 10;
+const b = 20;
+
+// Using a conditional(ternary) operator to find the maximum
+const max_value = a > b ? a : b;
+
+console.log("The maximum value is:", max_value);  // Output: The maximum value is: 20
+```
+The good news is, there's an [equivalent one in Python](https://docs.python.org/3/reference/expressions.html#conditional-expressions) as well.
+```python:conditional_expression.py
+# Define two numbers
+a = 10
+b = 20
+
+# Using a conditional expression to find the maximum
+max_value = a if a > b else b
+
+print("The maximum value is:", max_value)  # Output: The maximum value is: 20
+```
+
+
+## Solutions
+
+### 1. Naïve solution
+In this solution we are going to convert them into another data structure(list), and then converting the result back into a linked list, follow these steps:
+
+Here's the implementation:
+```python:recursion.py
+def to_list(node: ListNode):
+    result = []
+    while node:
+        result.append(node.val)
+        node = node.next
+    return result
+
+
+def to_linked_list(lst: List[int]):
+    head = ListNode()
+    pointer = head
+    for num in lst:
+        pointer.next = ListNode(val=num)
+        pointer = pointer.next
+    return head.next
+
+
+def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
+    list1 = to_list(l1)
+    list2 = to_list(l2)
+    answer = []
+    carry = 0
+    while list1 or list2 or carry:
+        num1 = list1.pop() if len(list1) > 0 else 0
+        num2 = list2.pop() if len(list2) > 0 else 0
+        carry, sum_value = divmod(num1 + num2 + carry, 10)
+        answer.append(sum_value)
+    return to_linked_list(answer)
+```
+
+### 2. No conversion
+You can streamline the process of adding two linked lists by avoiding the need to convert them back and forth between different data structures. Instead, you can build the resulting linked list as you iterate through the input lists, applying a similar logic as before.
+
+Here's how it works:
+```python:iteration.py
+def add_two_numbers(l1: ListNode, l2: ListNode) -> ListNode:
+    root = head = ListNode()  # Create a dummy head for the result list
+
+    carry = 0
+    while l1 or l2 or carry:
+        sum_value = 0
+        
+        # Add values from both lists, if available
+        if l1:
+            sum_value += l1.val
+            l1 = l1.next
+        if l2:
+            sum_value += l2.val
+            l2 = l2.next
+        
+        # Calculate carry and value for the current node
+        carry, val = divmod(sum_value + carry, 10)
+        
+        # Create a new node with the calculated value and append it to the result list
+        head.next = ListNode(val)
+        head = head.next
+
+    return root.next  # Return the head of the result list, skipping the dummy node
+```
+
+## References
+
+- [Leetcode Add Two Numbers Problem](https://leetcode.com/problems/palindrome-linked-list)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
