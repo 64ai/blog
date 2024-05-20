@@ -1,0 +1,67 @@
+---
+title: 'Swap Nodes in Pairs'
+date: '2024-05-19'
+tags: ['python', 'algorithm', 'linked list']
+draft: false
+summary: 'Swap every pair of the linked list. You are not supposed to change the value of the node.'
+---
+
+## Introduction
+Swap every pair of the linked list. You are not supposed to change the value of the node.
+```python:list_node.py
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode']=None):
+        self.val = val
+        self.next = next
+```
+
+## Solutions
+
+### 1. Using iteration
+This solution is intuitive. We traverse the list, swapping every pair of nodes and reconnecting them appropriately.
+
+
+```python:iteration.py
+def swap_nodes_in_pairs(head: ListNode) -> ListNode:
+    # Dummy node initialization to simplify edge cases
+    dummy = ListNode()
+    dummy.next = head
+    prev = dummy
+
+    while head and head.next:
+        # Nodes to be swapped
+        first_node = head
+        second_node = head.next
+
+        # Swapping the nodes
+        prev.next = second_node
+        first_node.next = second_node.next
+        second_node.next = first_node
+
+        # Reinitialize the prev and head for the next swap
+        prev = first_node
+        head = first_node.next
+
+    return dummy.next
+```
+
+### 2. Using recursion
+This approach offers a more concise solution with the power of recursion. Here's the implementation:
+
+```python:recursion.py
+def swap_nodes_in_pairs(head: ListNode) -> ListNode:
+    if head:
+        next_node = head.next
+        head.next = swap_nodes_in_pairs(next_node.next)
+        next_node.next = head
+        return next_node
+    return head
+```
+
+## References
+
+- [Leetcode Swap Nodes in Pairs Problem](https://leetcode.com/problems/swap-nodes-in-pairs)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
