@@ -1,0 +1,59 @@
+---
+title: 'Odd Even Linked List'
+date: '2024-05-20'
+tags: ['python', 'algorithm', 'linked list']
+draft: false
+summary: 'Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.'
+---
+
+## Introduction
+Given the `head` of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list. 
+
+The first node is considered odd, and the second node is even, and so on.  
+Note that the relative order inside both the even and odd groups should remain as it was in the input.  
+
+You must solve the problem in $$O(1)$$ extra space complexity and $$O(n)$$ time complexity.
+```python:list_node.py
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next: Optional['ListNode']=None):
+        self.val = val
+        self.next = next
+```
+
+## Solutions
+
+### 1. Using iteration
+While traversing the linked list, you can make each odd node point to the next odd node and each even node point to the next even node. Finally, link the last odd node to the first even node. Voilà, you have the rearranged list.
+
+
+```python:main.py
+def odd_even_linked_list(head: ListNode) -> ListNode:
+    # Initialize pointers for odd and even nodes
+    odd, even_root, even = head, head.next, head.next
+
+    # If the list is empty or has only one node, no reordering is needed
+    if not head or not even:
+        return head
+
+    # Traverse the list, reordering nodes
+    while even and even.next:
+        # Link the current odd/even node to the next odd/even node
+        odd.next, even.next = odd.next.next, even.next.next
+
+        # Move to the next odd/even node
+        odd, even = odd.next, even.next
+
+    # Link the last odd node to the head of the even nodes list
+    odd.next = even_root
+
+    # Return the reordered list starting from the head
+    return head
+```
+
+## References
+
+- [Leetcode Odd Even Linked List Problem](https://leetcode.com/problems/swap-nodes-in-pairs)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
