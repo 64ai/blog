@@ -1,0 +1,107 @@
+---
+title: 'Valid Parentheses'
+date: '2024-05-21'
+tags: ['python', 'algorithm', 'stack']
+draft: false
+summary: 'Given a string `s` containing just the characters `(`, `)`, `{`, `}`, `[` and `]`, determine if the input string is valid.'
+---
+
+## Introduction
+Given a string `s` containing just the characters `(`, `)`, `{`, `}`, `[` and `]`, determine if the input string is valid. An input string is valid if:
+Open brackets must be closed by the same type of brackets. Open brackets must be closed in the correct order. Every close bracket has a corresponding open bracket of the same type.
+
+## Things you should know
+### 1. Stack
+While [the built-in Python list](https://docs.python.org/3/library/stdtypes.html#lists) supports all stack operations, it's beneficial to understand how to build a stack from scratch. Below is a simple stack implementation using a linked list.  
+```python:stack.py
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Stack:
+    def __init__(self):
+        # Initialize the stack with no elements
+        self.last = None
+
+    def push(self, value: int):
+        # Create a new node and make it the top of the stack
+        new_node = ListNode(val=value, next=self.last)
+        self.last = new_node
+
+    def pop(self):
+        # Check if the stack is empty before attempting to pop
+        if self.is_empty():
+            raise IndexError("pop from empty stack")
+        # Remove and return the top value of the stack
+        item = self.last.val
+        self.last = self.last.next
+        return item
+
+    def peek(self):
+        # Return the top value without removing it, or None if the stack is empty
+        if self.is_empty():
+            return None
+        return self.last.val
+
+    def is_empty(self):
+        # Check if the stack has no elements
+        return self.last is None
+
+    def __repr__(self):
+        # Provide a string representation of the stack for debugging
+        values = []
+        current = self.last
+        while current:
+            values.append(current.val)
+            current = current.next
+        return "Stack (" + " -> ".join(map(str, values)) + ")"
+
+
+stack = Stack()
+stack.push(1)
+stack.push(2)
+stack.push(3)
+
+print(stack)  # Stack (3 -> 2 -> 1)
+```
+## Solutions
+
+### 1. Using stack
+This solution checks if a string of parentheses is valid. It uses a stack to ensure each opening bracket has a corresponding closing bracket in the correct order.
+
+
+```python:iteration.py
+def valid_parentheses(s: str) -> bool:
+    # If the string length is odd, it cannot be balanced
+    if len(s) % 2 == 1:
+        return False
+
+    # Stack to keep track of opening brackets
+    stack = []
+
+    # Mapping of closing to opening brackets
+    mapping = {
+        ')': '(',
+        '}': '{',
+        ']': '['
+    }
+
+    # Iterate through each character in the string
+    for char in s:
+        if char in mapping:
+            # If the stack is empty or the top of the stack doesn't match, return False
+            if not stack or stack.pop() != mapping[char]:
+                return False
+        else:
+            # If it's an opening bracket, push it onto the stack
+            stack.append(char)
+
+    # If the stack is empty, all opening brackets were matched
+    return not stack
+```
+
+## References
+
+- [Leetcode Valid Parentheses Problem](https://leetcode.com/problems/valid-parentheses)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
