@@ -1,0 +1,151 @@
+---
+title: 'Remove Duplicate Letters'
+date: '2024-05-23'
+tags: ['python', 'algorithm', 'stack']
+draft: false
+summary: 'Given a string `s`, remove duplicate letters so that every letter appears once and only once.'
+---
+
+## Introduction
+Given a string `s`, remove duplicate letters so that every letter appears once and only once. You must make sure your result is 
+the smallest in **lexicographical** order among all possible results. `s` consists of lowercase English letters.
+
+## Things you should know
+### 1. all about 'set'
+```python:set.py
+# Creating an Empty Set
+empty_set = set()
+print(empty_set)  # Output: set()
+
+# Creating a Set from a List with Duplicate Elements
+duplicate_list_set = set([1, 2, 2, 3, 4, 4, 5])
+print(duplicate_list_set)  # Output: {1, 2, 3, 4, 5}
+
+# Creating a Set from a String
+string_set = set("hello")
+print(string_set)  # Output: {'h', 'e', 'l', 'o'}
+
+# Creating a Set from a Tuple
+tuple_set = set((1, 2, 3, 4, 5))
+print(tuple_set)  # Output: {1, 2, 3, 4, 5}
+
+# Adding an Element to a Set
+my_set = {1, 2, 3}
+my_set.add(4)
+print(my_set)  # Output: {1, 2, 3, 4}
+
+# Removing an Element from a Set
+my_set = {1, 2, 3}
+my_set.remove(2)
+print(my_set)  # Output: {1, 3}
+
+# Checking Membership
+my_set = {1, 2, 3}
+print(2 in my_set)  # Output: True
+print(4 in my_set)  # Output: False
+
+# Set Union
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+union_set = set1.union(set2)
+print(union_set)  # Output: {1, 2, 3, 4, 5}
+
+# Set Intersection
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+intersection_set = set1.intersection(set2)
+print(intersection_set)  # Output: {3}
+
+# Set Difference
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+difference_set = set1.difference(set2)
+print(difference_set)  # Output: {1, 2}
+
+# Set Symmetric Difference:
+set1 = {1, 2, 3}
+set2 = {3, 4, 5}
+symmetric_difference_set = set1.symmetric_difference(set2)
+print(symmetric_difference_set)  # Output: {1, 2, 4, 5}
+
+# Removing an Element with Discard (No Error if Element Not Present)
+my_set = {1, 2, 3}
+my_set.discard(2)
+print(my_set)  # Output: {1, 3}
+my_set.discard(4)  # No error, even though 4 is not in the set
+print(my_set)  # Output: {1, 3}
+
+# Set Comprehension
+my_set = {x for x in range(10) if x % 2 == 0}
+print(my_set)  # Output: {0, 2, 4, 6, 8}
+
+# Set Equivalence
+set1 = {1, 2, 3}
+set2 = {1, 2, 3}
+print(set1 == set2) # Output: True
+```
+
+## Solutions
+### 1. Using set
+This solution uses the set data structure to remove duplicate letters 
+from the input string. The function recursively removes duplicates from the suffix and concatenates the current character to build the result string. 
+
+
+```python:using_stack.py
+def remove_duplicate_letters(s: str) -> str:
+    # Iterate through each character in the sorted set of characters from the string
+    for char in sorted(set(s)):
+        # Find the suffix of the string starting from the first occurrence of the character
+        suffix = s[s.index(char):]
+
+        # If the set of characters in the original string is the same as the set in the suffix
+        # This ensures that all unique characters of the original string are present in the suffix
+        if set(s) == set(suffix):
+            # Recursively call the function to remove duplicates, concatenating the current character
+            # The character is replaced with an empty string in the suffix to avoid repetition
+            return char + remove_duplicate_letters(suffix.replace(char, ''))
+
+    # Return an empty string if the input string is empty
+    return ''
+```
+
+
+### 2. Using stack
+This algorithm uses a stack to construct the result string while ensuring that 
+the letters are in lexicographical order and appear only once.
+
+
+```python:iteration.py
+from collections import Counter
+
+def remove_duplicate_letters(s: str) -> str:
+    # Create a counter to count the occurrences of each character in the string
+    counter, seen, stack = Counter(s), set(), []
+
+    # Iterate through each character in the string
+    for char in s:
+        # Decrease the count of the current character in the counter
+        counter[char] -= 1
+        
+        # If the character is already in the seen set, skip it
+        if char in seen:
+            continue
+
+        # While the stack is not empty, and the current character is smaller than the last character in the stack
+        # and the last character in the stack still appears later in the string (i.e., its count is greater than 0)
+        while stack and char < stack[-1] and counter[stack[-1]] > 0:
+            # Remove the last character from the stack and from the seen set
+            seen.remove(stack.pop())
+
+        # Add the current character to the stack and mark it as seen
+        stack.append(char)
+        seen.add(char)
+    
+    # Join the characters in the stack to form the final result string
+    return ''.join(stack)
+```
+
+## References
+
+- [Leetcode Remove Duplicate Letters Problem](https://leetcode.com/problems/remove-duplicate-letters)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
