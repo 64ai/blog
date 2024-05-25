@@ -1,0 +1,51 @@
+---
+title: 'Daily Temperatures'
+date: '2024-05-24'
+tags: ['python', 'algorithm', 'stack']
+draft: false
+summary: 'How many more days do we have to wait for the temperatures to be higher?'
+---
+
+## Introduction
+Given an array of integers temperatures represents the daily temperatures,
+return an array answer such that `answer[i]` is the number of days you have to wait
+after the ith day to get a warmer temperature.
+If there is no future day for which this is possible, keep `answer[i] == 0` instead.
+
+## Solutions
+### 1. Using stack
+This solution uses a stack to efficiently find the number of days until a warmer temperature for each day in the input list.
+
+```python:using_stack.py
+def daily_temperatures(temperatures: List[int]) -> List[int]:
+    stack = []
+    answer = [0] * len(temperatures)
+    for index, temperature in enumerate(temperatures):
+        while stack and stack[-1][1] < temperature:
+            idx, temp = stack.pop()
+            answer[idx] = index - idx
+        stack.append((index, temperature))
+    return answer
+```
+
+
+### 2. Using stack, but faster
+It turns out that you don't have to store both index and the corresponding item.
+In this optimized solution, we use a stack to store only the indices of the days. This reduces memory usage since we can always retrieve the temperature using the index. 
+This solution is nearly three times as fast as the previous one.
+
+```python:iteration.py
+def daily_temperatures(temperatures: List[int]) -> List[int]:
+    stack = []
+    answer = [0] * len(temperatures)
+    for index, temperature in enumerate(temperatures):
+        while stack and temperatures[stack[-1]] < temperature:
+            last = stack.pop()
+            answer[last] = index - last
+    return answer
+```
+
+## References
+
+- [Leetcode Daily Temperatures Problem](https://leetcode.com/problems/daily-temperatures)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
