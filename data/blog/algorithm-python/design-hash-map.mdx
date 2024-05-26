@@ -1,0 +1,124 @@
+---
+title: 'Design Hashmap'
+date: '2024-05-26'
+tags: ['python', 'algorithm', 'hashmap']
+draft: false
+summary: 'Design a HashMap without using any built-in hash table libraries.'
+---
+
+## Introduction
+Design a `HashMap` without using any built-in hash table libraries. Implement the `MyHashMap` class: `MyHashMap()` initializes the object with an empty map.
+* **void put(int key, int value)** 
+    * inserts a (key, value) pair into the HashMap. If the key already exists in the map, update the corresponding value.
+* **int get(int key)** 
+    * returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key.
+* **void remove(key)** 
+    * removes the key and its corresponding value if the map contains the mapping for the key.
+
+## Things you should know
+### 1. Hashing
+Hashing is a technique used to convert an arbitrary value(such as string or number) into a fixed-sized value, often called a `hash-value` or `hash-code`. Which serves as a key for fast data retrieval from a hash table. The hash code is deterministically generated with the help of `hash function`, meaning that same input will always produce the same output no matter how many times you run the function.
+
+### 2. Hash function
+You can give it a try to experience using one example of hash function. You'll observe that even a very small change in the input value can lead to a significant change in the output, making it nearly impossible to reverse engineer.
+
+```python:sha256.py
+import hashlib
+
+# Define two slightly different inputs
+input1 = "Hello, World!"
+input2 = "Hello, World?"
+
+# Create SHA-256 hash objects
+sha256_hash1 = hashlib.sha256()
+sha256_hash2 = hashlib.sha256()
+
+# Update hash objects with input data
+sha256_hash1.update(input1.encode('utf-8'))
+sha256_hash2.update(input2.encode('utf-8'))
+
+# Get hexadecimal representations of the hashes
+hash_value1 = sha256_hash1.hexdigest()
+hash_value2 = sha256_hash2.hexdigest()
+
+# Print the hash values (same lengths)
+print(hash_value1) # dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f
+print(hash_value2) # f16c3bb0532537acd5b2e418f2b1235b29181e35cffee7cc29d84de4a1d62e4d
+```
+
+### 3. Collision handling
+There are numerous mechanism/algorithm to handle the hash collision, I would like to focus on primarily used ones.
+1. **Open Addressing**
+  * In open addressing, all elements are stored directly within the hash table. When a collision occurs, a probing sequence determines the next slot to check.
+
+2. **Separate Chaining**
+  * In separate chaining, each slot in the hash table points to a collection (usually a linked list) of elements that hash to the same index. This method allows multiple elements to be stored at the same index without affecting other indices.
+
+## Solutions
+### 1. Using Separate Chaining
+Here's the complete implementation of our MyHashMap class. We are storing both key and value in the form of linked lists. In ideal cases where there are no collisions, the operations (insertion, retrieval, and deletion) run in $$O(1)$$ time complexity. 
+
+
+```python:main.py
+from typing import Optional, List
+
+
+class ListNode:
+    def __init__(self, key: int, val: int, nxt: Optional['ListNode']):
+        self.key = key
+        self.val = val
+        self.next = nxt
+
+
+class MyHashMap:
+    # Initialize the hash map
+    def __init__(self):
+        self.size = 19997 # prime number for minimizing collision.
+        self.multiplier = 12582917 # another prime number
+        self.table: List[Optional[ListNode]] = [None] * self.size
+
+    # Hash function to compute index for a given key
+    def hash(self, key: int) -> int:
+        return (self.multiplier * key) % self.size
+
+    # Insert or update the value for a given key
+    def put(self, key: int, value: int) -> None:
+        self.remove(key)
+        index = self.hash(key)
+        node = ListNode(key, value, self.table[index])
+        self.table[index] = node
+
+    # Retrieve the value for a given key, return -1 if the key does not exist
+    def get(self, key: int) -> int:
+        index = self.hash(key)
+        node = self.table[index]
+
+        while node:
+            if node.key == key:
+                return node.val
+            node = node.next
+        return -1
+
+    # Remove the node for a given key
+    def remove(self, key: int) -> None:
+        index = self.hash(key)
+        node = self.table[index]
+
+        if not node:
+            return
+
+        if node.key == key:
+            self.table[index] = node.next
+            return
+
+        while node.next:
+            if node.next.key == key:
+                node.next = node.next.next
+                return
+            node = node.next
+```
+
+## References
+
+- [Leetcode Design Hashmap Problem](https://leetcode.com/problems/design-hashmap)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
