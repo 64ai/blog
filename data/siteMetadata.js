@@ -1,22 +1,22 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Alex Noh',
-  headerTitle: 'TailwindBlog',
-  description: 'A blog created with Next.js and Tailwind.css',
+  title: 'Alex64',
+  author: 'Alex Seungnam Noh',
+  headerTitle: 'Alex64',
+  description: 'Records of me striving to be better than what I was yesterday. ',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://64-ai.vercel.app',
   siteRepo: 'https://github.com/64ai/blog',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'alex64noh@yoursite.com',
+  // mastodon: 'https://mastodon.social/@mastodonuser',
+  email: 'alex64noh@gmail.com',
   github: 'https://github.com/64ai',
   // twitter: 'https://twitter.com/Twitter',
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com/in/sam-rho',
+  linkedin: 'https://www.linkedin.com/in/alex64noh',
   // threads: 'https://www.threads.net',
   // instagram: 'https://www.instagram.com',
   locale: 'en-US',
@@ -42,11 +42,11 @@ const siteMetadata = {
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
     // },
   },
-  newsletter: {
-    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
-    // Please add your .env file and modify it according to your selection
-    provider: 'buttondown',
-  },
+  // newsletter: {
+  //   // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
+  //   // Please add your .env file and modify it according to your selection
+  //   provider: 'buttondown',
+  // },
   comments: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
