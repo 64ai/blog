@@ -1,0 +1,35 @@
+---
+title: 'Longest Substring without Repeating Characters'
+date: '2024-05-27'
+tags: ['python', 'algorithm', 'hashmap']
+draft: false
+summary: 'Given a string s, find the length of the longest substring without repeating characters.'
+---
+
+## Introduction
+Given a string `s`, find the length of the longest substring without **repeating characters**.
+
+## Solutions
+It utilizes a [sliding window approach](https://www.geeksforgeeks.org/window-sliding-technique/) with a dictionary to track the last seen position of each character. 
+The `start` variable marks the starting index of the current window, while `max_length` stores the length of the longest substring found so far. 
+As the function iterates through the string, it adjusts the window based on whether the current character is already seen within the window. 
+Finally, it returns the maximum length found.
+### 1. Using Hashmap
+```python:main.py
+def longest_substring_without_repeating_characters(s: str) -> int:
+    seen = {}
+    start = 0
+    max_length = 0
+    for index, char in enumerate(s):
+        if char in seen and start <= seen[char]:
+            start = seen[char] + 1
+        else:
+            max_length = max(max_length, index - start + 1)
+        seen[char] = index
+    return max_length
+```
+
+## References
+
+- [Leetcode Longest Substring without Repeating Characters Problem](https://leetcode.com/problems/design-hashmap)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
