@@ -1,0 +1,135 @@
+---
+title: 'Top K Frequent Elements'
+date: '2024-05-28'
+tags: ['python', 'algorithm', 'hashmap']
+draft: false
+summary: 'Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.'
+---
+
+## Introduction
+Given an integer array `nums` and an integer `k`, return the k most frequent elements. You may return the answer **in any order**.
+
+## Things you should know
+The `*` operator is used for unpacking iterable objects like **lists**, **tuples**, and **strings**.  
+The `**` operator is used for unpacking dictionaries into keyword arguments or for combining **dictionaries**.
+### 1. sequence unpacking operator(*, asterisk)
+#### 1.1. Unpacking list elements
+```python:unpack.py
+numbers = [1, 2, 3, 4, 5]
+a, *b, c = numbers
+print(a)  # Output: 1
+print(b)  # Output: [2, 3, 4]
+print(c)  # Output: 5
+```
+
+#### 1.2. Unpacking function arguments
+```python:unpack.py
+def sum_numbers(a, b, c):
+    return a + b + c
+
+numbers = [1, 2, 3]
+result = sum_numbers(*numbers)
+print(result)  # Output: 6
+```
+
+#### 1.3. Unpacking dictionary
+```python:unpack.py
+person = {'name': 'Alice', 'age': 30, 'city': 'New York'}
+def greet(name, age, city):
+    return f"Hello {name}, you are {age} years old and you live in {city}."
+
+greeting = greet(**person)
+print(greeting)  # Output: Hello Alice, you are 30 years old and you live in New York.
+```
+
+#### 1.4. Combining dictionaries
+```python:unpack.py
+defaults = {'color': 'blue', 'size': 'medium'}
+customizations = {'size': 'large', 'weight': 'heavy'}
+combined = {**defaults, **customizations}
+print(combined)  # Output: {'color': 'blue', 'size': 'large', 'weight': 'heavy'}
+```
+
+#### 1.5. Passing keyword arguments to a function
+```python:unpack.py
+def person_info(name, age, city):
+    return f"Name: {name}, Age: {age}, City: {city}"
+
+info = {'name': 'Bob', 'age': 25, 'city': 'Los Angeles'}
+result = person_info(**info)
+print(result)  # Output: Name: Bob, Age: 25, City: Los Angeles
+```
+
+### 2. zip() function
+The `zip()` function in Python is used to combine elements from two or more iterables into tuples. 
+Here are some examples of how you can use the `zip()` function:
+
+#### 2.1. Combining two lists into tuples
+```python:zip.py
+numbers = [1, 2, 3, 4]
+letters = ['a', 'b', 'c', 'd']
+result = list(zip(numbers, letters))
+print(result)  # Output: [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+```
+
+#### 2.2. Combining three lists into tuples
+```python:zip.py
+names = ['Alice', 'Bob', 'Charlie']
+ages = [25, 30, 35]
+genders = ['Female', 'Male', 'Male']
+result = list(zip(names, ages, genders))
+print(result)  # Output: [('Alice', 25, 'Female'), ('Bob', 30, 'Male'), ('Charlie', 35, 'Male')]
+```
+
+#### 2.3. Unzipping tuples into separate lists
+```python:zip.py
+data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+numbers, letters = zip(*data)
+print(numbers)  # Output: (1, 2, 3, 4)
+print(letters)  # Output: ('a', 'b', 'c', 'd')
+```
+
+#### 2.4. Iterating over multiple lists simultaneously
+```python:zip.py
+fruits = ['apple', 'banana', 'orange']
+prices = [1.00, 0.50, 0.75]
+for fruit, price in zip(fruits, prices):
+    print(f"The price of {fruit} is ${price}")
+# Output:
+# The price of apple is $1.00
+# The price of banana is $0.50
+# The price of orange is $0.75
+```
+
+#### 2.5. Zipping iterables with different lengths
+```python:zip.py
+numbers = [1, 2, 3, 4]
+letters = ['a', 'b', 'c']
+result = list(zip(numbers, letters))
+print(result)  # Output: [(1, 'a'), (2, 'b'), (3, 'c')]
+# Note: The zip function stops when the shortest iterable is exhausted.
+```
+
+## Solutions
+### 1. Using Counter
+You can solve this problem very easily with the help of our little friend, `collections.Counter`.
+
+```python:main.py
+from typing import List
+from collections import Counter
+
+
+def top_k_frequent_elements(nums: List[int], k: int) -> List[int]:
+    return [item for item, occurrence in Counter(nums).most_common(k)]
+```
+
+### 2. Using Counter, but with zip
+By cleverly combining the functionalities of `Counter` and `zip`, you can elegantly address the problem at hand.
+```python:main.py
+def top_k_frequent_elements(nums: List[int], k: int) -> List[int]:
+    return list(zip(*Counter(nums).most_common(k)))[0]
+```
+## References
+
+- [Leetcode Top K Frequent Elements Problem](https://leetcode.com/problems/top-k-frequent-elements)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
