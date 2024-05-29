@@ -1,0 +1,81 @@
+---
+title: 'Permutations'
+date: '2024-05-29'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order. All the integers of nums are unique.'
+---
+
+## Introduction
+Given an array `nums` of distinct integers, return all the possible permutations. You can return the answer in any order. All the integers of `nums` are unique.
+
+## Things you should know
+### 1. itertools.permutations
+The `itertools` module in Python is a standard library that provides a collection of tools for handling iterators. 
+Internally implemented in C, `itertools` is both super fast and memory-efficient. In many practical situations, using `itertools.permutations` is preferable to creating a custom permutation generator from scratch, 
+allowing us to leverage a reliable and optimized solution [without reinventing the wheel](https://en.wikipedia.org/wiki/Reinventing_the_wheel).
+```python:itertools_example.py
+from itertools import permutations
+
+# Output: [(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)]
+print(list(permutations([1,2,3])))
+
+```
+## Solutions
+### 1. Using Back-tracking(dfs)
+The backtracking approach involves recursively building permutations and backtracking to explore all possible arrangements. 
+```python:main.py
+def permute(nums: List[int]) -> List[List[int]]:
+    if not nums:
+        return []
+    if len(nums) == 1:
+        return [nums]
+
+    result = []
+
+    def dfs(lst: List[int], completed: List[int]):
+        if len(completed) == len(nums):
+            result.append(completed)
+
+        for num in lst:
+            dfs([item for item in lst if item != num], [*completed, num])
+
+    dfs(nums, [])
+    return result
+```
+
+### 2. Using Back-tracking but a littler bit faster
+The following approach is a slight optimization over the previous backtracking method. Instead of using list comprehensions and concatenation within the DFS function, it uses slicing, which can be slightly more efficient.
+```python:main.py
+def permute(nums: List[int]) -> List[List[int]]:
+    if not nums:
+        return []
+    if len(nums) == 1:
+        return [nums]
+
+    result = []
+
+    def dfs(lst: List[int], completed: List[int]):
+        if len(completed) == len(nums):
+            result.append(completed)
+        
+        for i in range(len(lst)):
+            dfs(lst[:i] + lst[i+1:], completed + [lst[i]])
+
+    dfs(nums, [])
+    return result
+```
+
+### 3. Using itertools
+Utilizing `itertools` is ridiculously easy and straightforward. But remember, the goal here is not just to get things done but **to understand how it works**.
+```python:main.py
+import itertools
+
+
+def permute(nums: List[int]) -> List[List[int]]:
+    return list(permutations(nums))
+```
+## References
+
+- [Leetcode Permutations Problem](https://leetcode.com/problems/number-of-islands)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
