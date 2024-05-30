@@ -1,0 +1,56 @@
+---
+title: 'Combinations'
+date: '2024-05-30'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n]. You may return the answer in any order.'
+---
+
+## Introduction
+Given two integers `n` and `k`, return all possible combinations of k numbers chosen from the range `[1, n]`. You may return the answer in any order.
+
+## Things you should know
+### 1. itertools.combinations
+The `itertools.combinations` function in Python is used to generate all possible combinations of a specified length from a given iterable (like a list or a range). Each combination is a unique group of items where the order does not matter.
+
+```python:itertools_example.py
+from itertools import combinations
+
+# Output: [(1, 2), (1, 3), (2, 3)]
+print(list(combinations(range(1, 4), 2)))
+```
+## Solutions
+### 1. Using Back-tracking(dfs)
+Unlike permutations, combinations **should not include duplicates**. Here’s an efficient implementation using a depth-first search (DFS) approach.
+```python:main.py
+def combine(n: int, k: int) -> List[List[int]]:
+    if n == 1:
+        return [[1]]
+
+    answer = []
+
+    def dfs(start, path):
+        if k == len(path):
+            answer.append(path)
+            return
+        for i in range(start, n + 1):
+            dfs(i + 1, path + [i])
+
+    dfs(1, [])
+
+    return answer
+```
+
+### 2. Using itertools
+This method is straightforward. Remember, there are many powerful built-in modules you can use to simplify your code!
+```python:main.py
+from itertools import combinations
+
+
+def combine(n: int, k: int) -> List[List[int]]:
+   return list(combinations(range(1, n + 1), k))
+```
+## References
+
+- [Leetcode Combinations Problem](https://leetcode.com/problems/combinations)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
