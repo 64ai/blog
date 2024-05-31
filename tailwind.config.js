@@ -42,6 +42,9 @@ module.exports = {
               fontWeight: '700',
               letterSpacing: theme('letterSpacing.tight'),
             },
+            'sup > a': {
+              textDecoration: 'none',
+            },
             h3: {
               fontWeight: '600',
             },
