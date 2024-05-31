@@ -1,0 +1,77 @@
+---
+title: 'Combination Sum'
+date: '2024-05-30'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. '
+---
+
+## Introduction
+Given an array of **distinct** integers `candidates` and a target integer `target`, 
+return a list of all **unique combinations** of `candidates` where the chosen numbers sum to target. 
+You may return the combinations in **any order.**
+
+The **same** number may be chosen from `candidates` an unlimited number of times.
+Two combinations are unique if the **frequency**[^1] of at least one of the chosen numbers is different.
+The test cases are generated such that the number of unique combinations that sum up to `target` is 
+less than `150` combinations for the given input.
+
+
+## Solutions
+### 1. Using DFS
+This solution uses DFS to explore all combinations of candidates that sum up to target. 
+It checks each combination and appends it to answer if it meets the criteria. 
+I checked `candidates[i] < lst[-1]` to avoid duplicate combinations. 
+
+```python:main.py
+def combination_sum_old(candidates: List[int], target: int) -> List[List[int]]:
+    answer = []
+
+    def dfs(lst: List[int]):
+        total = sum(lst)
+        if total == target:
+            answer.append(lst)
+            return
+        if total > target:
+            return
+
+        for i in range(len(candidates)):
+            if lst and candidates[i] < lst[-1]:
+                continue
+            dfs(lst + [candidates[i]])
+
+    dfs([])
+
+    return answer
+```
+
+### 2. Using DFS, but faster
+This solution also explores all combinations of candidates that sum up to target 
+but is more efficient. It skips all the unnecessary calculation by taking `index` into consideration.
+
+```python:main.py
+def combination_sum(candidates: List[int], target: int) -> List[List[int]]:
+    answer = []
+
+    def dfs(lst: List[int], index=0):
+        total = sum(lst)
+        if total == target:
+            answer.append(lst)
+            return
+        if total > target:
+            return
+
+        for i in range(index, len(candidates)):
+            dfs(lst + [candidates[i]], i)
+
+    dfs([], 0)
+
+    return answer
+```
+
+## References
+
+- [Leetcode Combination Sum Problem](https://leetcode.com/problems/combination-sum)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
+
+[^1]: The frequency of an element x is the number of times it occurs in the array.
