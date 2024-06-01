@@ -1,0 +1,38 @@
+---
+title: 'Subsets'
+date: '2024-05-31'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.'
+---
+
+## Introduction
+Given an integer array `nums` of **unique** elements, return _all possible **subsets**[^1] (the power set)_. 
+The solution set **must not** contain duplicate subsets. Return the solution in **any order**.
+
+
+## Solutions
+### 1. Using DFS
+This solution is straightforward. Starting from an empty list, it appends elements recursively to build all possible subsets of the given list `nums`.
+```python:main.py
+def subsets(nums: List[int]) -> List[List[int]]:
+    answer = []
+
+    def dfs(lst, index=0):
+        answer.append(lst)
+        if index == len(nums):
+            return
+        for i in range(index, len(nums)):
+            dfs(lst + [nums[i]], i + 1)
+
+    dfs([], 0)
+
+    return answer
+```
+
+## References
+
+- [Leetcode Subsets Problem](https://leetcode.com/problems/subsets)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
+
+[^1]: A **subset** of an array is a selection of elements (possibly none) of the array.
