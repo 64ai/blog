@@ -1,0 +1,80 @@
+---
+title: 'Reconstruct Itinerary'
+date: '2024-06-01'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given an integer array nums of unique elements, return all possible reconstruct Itinerary (the power set). The solution set must not contain duplicate reconstruct Itinerary. Return the solution in any order.'
+---
+
+## Introduction
+You are given a list of airline tickets where `tickets[i]` = [$$from_i$$, $$to_i$$] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
+
+All of the tickets belong to a man who departs from `"JFK"`, thus, the itinerary must begin with `"JFK"`. 
+If there are multiple valid itineraries, you should return the itinerary that has the **smallest lexical order** when read as a single string.
+
+For example, the itinerary `["JFK", "LGA"]` has a smaller lexical order than `["JFK", "LGB"]`.
+You may assume all tickets form at least one valid itinerary. 
+You must use all the tickets **once and only once**.
+
+## Things you should know
+### 1. sorting a nested list
+By default, if you call `sorted` function with a nested list, it sorts the list by the first element of each entry. You can always change the sorting criteria by providing `key` parameter
+```python:main.py
+# Sorting a Nested List by the First Element
+nested_list = [[2, 3], [1, 4]]
+sorted_nested_list = sorted(nested_list)
+print(sorted_nested_list)  # Output: [[1, 4], [2, 3]]
+
+# Sorting a Nested List by the Second Element
+nested_list = [[2, 3], [1, 4]]
+sorted_nested_list = sorted(nested_list, key=lambda x: x[1])
+print(sorted_nested_list)  # Output: [[2, 3], [1, 4]]
+```
+## Solutions
+### 1. Using DFS(recursion)
+This DFS solution reconstructs the itinerary by building a graph from the tickets and recursively visiting each airport. 
+It starts at `'JFK'` and continues to visit destinations in lexicographical order. 
+The final itinerary is obtained by reversing the list of visited airports.
+
+The `pop(0)` operation can take $$O(n)$$ time, so it might be better to use a `deque` or to sort the destinations in reverse order from the start.
+
+```python:main.py
+def reconstruct_itinerary(tickets: List[List[str]]) -> List[str]:
+    flights = defaultdict(list)
+
+    for origin, destination in sorted(tickets):
+        flights[origin].append(destination)
+
+    itinerary = []
+
+    def dfs(airport):
+        while flights[airport]:
+            dfs(flights[airport].pop(0))
+        itinerary.append(airport)
+
+    dfs('JFK')
+
+    return itinerary[::-1]
+```
+
+### 2. Using a stack
+You can also solve the problem without recursion. Make sure to reverse the `itinerary` at the end because the last airport with no further destinations will be added first in the list.
+```python:main.py
+def reconstruct_itinerary(tickets: List[List[str]]) -> List[str]:
+    flights = defaultdict(list)
+
+    itinerary, stack = [], ["JFK"]
+    for origin, destination in sorted(tickets):
+        flights[origin].append(destination)
+
+    while stack:
+        while flights[stack[-1]]:
+            stack.append(flights[stack[-1]].pop(0))
+        itinerary.append(stack.pop())
+    return itinerary[::-1]
+```
+
+## References
+
+- [Leetcode Reconstruct Itinerary Problem](https://leetcode.com/problems/reconstruct-itinerary)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
