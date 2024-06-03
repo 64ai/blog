@@ -1,0 +1,65 @@
+---
+title: 'Course Schedule'
+date: '2024-06-01'
+tags: ['python', 'algorithm', 'graph', 'dfs']
+draft: false
+summary: 'Given an integer array nums of unique elements, return all possible course Schedule (the power set). The solution set must not contain duplicate course Schedule. Return the solution in any order.'
+---
+
+## Introduction
+There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. 
+You are given an array `prerequisites` where `prerequisites[i] = [a(i), b(i)]` indicates that you **must** take course `b(i)` first if you want to take course `a(i)`.
+
+For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
+Return `true` if you can finish all courses. Otherwise, return `false`.
+
+
+## Solutions
+### 1. Using DFS(recursion)
+This solution detects cycles in the course-prerequisites relationship. 
+To identify a cycle, it recursively calls the `dfs` function. 
+For efficiency, it stores nodes that have already been visited in the `visited` set.
+
+```python:main.py
+def can_finish(num_courses: int, prerequisites: List[List[int]]) -> bool:
+    course_graph = defaultdict(list)
+
+    for course, prerequisite in prerequisites:
+        course_graph[prerequisite].append(course)
+
+    # courses being traced to detect a cycle.
+    traced = set()
+
+    # courses already visited.
+    visited = set()
+
+    def dfs(course):
+        if course in traced:
+            return False
+        if course in visited:
+            return True
+
+        traced.add(course)
+
+        # Process all the next courses that depend on the current course
+        for next_course in course_graph[course]:
+            if not dfs(next_course):
+                return False
+
+        traced.remove(course)
+        visited.add(course)
+
+        return True
+
+    # Check each course in the graph
+    for course in range(num_courses):
+        if course in course_graph and not dfs(course):
+            return False
+
+    return True
+```
+
+## References
+
+- [Leetcode Course Schedule Problem](https://leetcode.com/problems/course-schedule)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
