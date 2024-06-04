@@ -1,0 +1,52 @@
+---
+title: 'Network Delay Time'
+date: '2024-06-02'
+tags: ["python", "algorithm", "graph", "Dijkstra's algorithm"]
+draft: false
+summary: 'Given an integer array nums of unique elements, return all possible network Delay Time (the power set). The solution set must not contain duplicate network Delay Time. Return the solution in any order.'
+---
+
+## Introduction
+You are given a network of `n` nodes, labeled from `1` to `n`. You are also given `times`,
+a list of travel times as directed edges `times[i] = (u(i), v(i), w(i))`, where `u(i)` is the source node,
+`v(i)` is the target node, and `w(i)` is the time it takes for a signal to travel from source to target.
+
+We will send a signal from a given node `k`.
+Return _the **minimum** time it takes for all the `n` nodes to receive the signal_.
+If it is impossible for all the `n` nodes to receive the signal, return `-1`.
+
+## Solutions
+### 1. Using Dijkstra's algorithm
+We will use Dijkstra's algorithm, a classic algorithm for finding the shortest paths from a source node to all other nodes in a graph with non-negative weights.
+
+```python:main.py
+def network_delay_time(times: List[List[int]], n: int, k: int) -> int:
+    # Create the graph as an adjacency list
+    graph = defaultdict(list)
+    for source, destination, travel_time in times:
+        graph[source].append((destination, travel_time))
+
+    # Dictionary to track the minimum time to reach each node
+    distances = {}
+
+    # Min-heap priority queue to explore the nodes with the shortest known distance first
+    priority_queue = [(0, k)]  # (time, node)
+
+    while priority_queue:
+        current_time, node = heappop(priority_queue)
+
+        # If the node is not already visited
+        if node not in distances:
+            distances[node] = current_time
+            for neighbor, travel_time in graph[node]:
+                arrival_time = current_time + travel_time
+                heappush(priority_queue, (arrival_time, neighbor))
+
+    # If all nodes are reached, return the maximum distance, otherwise return -1
+    return max(distances.values()) if len(distances) == n else -1
+```
+
+## References
+
+- [Leetcode Network Delay Time Problem](https://leetcode.com/problems/network-delay-time)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
