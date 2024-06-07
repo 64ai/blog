@@ -1,0 +1,117 @@
+---
+title: 'Maximum Depth of Binary Tree'
+date: '2024-06-04'
+tags: ['python', 'algorithm', 'tree']
+draft: false
+summary: 'Given the root of a binary tree, return its maximum depth.'
+---
+
+## Introduction
+
+Given the root of a binary tree, return its maximum depth.
+A binary tree's maximum depth is the number of nodes along the longest path
+from the root node down to the farthest leaf node. the `TreeNode` will look like this.
+
+```python:tree-node.py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+## Things you should know
+
+### 1. nonlocal
+
+The `nonlocal` keyword is used in Python to refer to variables defined in the nearest enclosing scope that is not global.
+Here’s a simple example to illustrate how `nonlocal` works:
+
+```python:nonlocal.py
+# Without nonlocal
+def outer_function():
+    x = 10
+
+    def inner_function():
+        x = 20  # This creates a new local variable `x` in `inner_function`
+        print("Inner x:", x) # Inner x: 20
+
+    inner_function()
+    print("Outer x:", x) # Outer x: 10
+
+outer_function()
+
+# With nonlocal
+def outer_function():
+    x = 10
+
+    def inner_function():
+        nonlocal x  # This refers to the `x` defined in `outer_function`
+        x = 20  # This modifies the `x` in `outer_function`
+        print("Inner x:", x)
+
+    inner_function()
+    print("Outer x:", x)
+
+outer_function()
+```
+
+## Solutions
+
+### 1. Using DFS
+
+This solution uses DFS to traverse all the nodes in the binary tree until it reaches the leaf nodes.
+At each step, it recursively computes the depth of the `left` and `right` subtrees and updates the maximum depth accordingly.
+
+```python:main.py
+def maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
+    max_depth = 0
+
+    def dfs(node: Optional[TreeNode], depth=1):
+        nonlocal max_depth
+        if not node:
+            return
+        max_depth = max(max_depth, depth)
+        dfs(node.left, depth + 1)
+        dfs(node.right, depth + 1)
+
+    dfs(root)
+    return answer
+```
+
+### Using BFS
+
+This solution uses BFS to traverse the binary tree level by level.
+By doing so, it computes the maximum depth by tracking the depth of each node as it is visited.
+
+```python:main.py
+from collections import deque
+from typing import Optional
+
+
+def bfs_maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
+    if not root:
+        return 0
+
+    depth = 0
+    queue = deque([root])
+
+    while queue:
+        depth += 1
+        level_length = len(queue)
+
+        for _ in range(level_length):
+            node = queue.popleft()
+
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+    return depth
+```
+
+## References
+
+- [Leetcode Maximum Depth of Binary Tree Problem](https://leetcode.com/problems/maximum-depth-of-binary-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
