@@ -1,0 +1,81 @@
+---
+title: 'Diameter of Binary Tree'
+date: '2024-06-07'
+tags: ['python', 'algorithm', 'tree']
+draft: false
+summary: 'Given the root of a binary tree, return the length of the diameter of the tree.'
+---
+
+## Introduction
+Given the `root` of a binary tree, return _the length of the **diameter** of the tree_.
+The **diameter** of a binary tree is the **length** of the longest path between any two nodes in a tree. 
+This path may or may not pass through the `root`.
+The **length** of a path between two nodes is represented by the number of edges between them.
+
+```python:tree-node.py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+## Solutions
+
+### 1. Using DFS
+
+This solution uses DFS to traverse all the nodes in the binary tree until it reaches the leaf nodes.
+At each step, it recursively computes the depth of the `left` and `right` subtrees and updates the maximum depth accordingly.
+
+```python:main.py
+def maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
+    max_depth = 0
+
+    def dfs(node: Optional[TreeNode], depth=1):
+        nonlocal max_depth
+        if not node:
+            return
+        max_depth = max(max_depth, depth)
+        dfs(node.left, depth + 1)
+        dfs(node.right, depth + 1)
+
+    dfs(root)
+    return answer
+```
+
+### Using BFS
+
+This solution uses BFS to traverse the binary tree level by level.
+By doing so, it computes the maximum depth by tracking the depth of each node as it is visited.
+
+```python:main.py
+from collections import deque
+from typing import Optional
+
+
+def maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
+    if not root:
+        return 0
+
+    depth = 0
+    queue = deque([root])
+
+    while queue:
+        depth += 1
+        level_length = len(queue)
+
+        for _ in range(level_length):
+            node = queue.popleft()
+
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+
+    return depth
+```
+
+## References
+
+- [Leetcode Diameter of Binary Tree Problem](https://leetcode.com/problems/diameter-of-binary-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
