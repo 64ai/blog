@@ -25,54 +25,23 @@ class TreeNode:
 ### 1. Using DFS
 
 This solution uses DFS to traverse all the nodes in the binary tree until it reaches the leaf nodes.
-At each step, it recursively computes the depth of the `left` and `right` subtrees and updates the maximum depth accordingly.
+At each step, it recursively computes the depth of the `left` and `right` subtrees and updates the maximum diameter accordingly.
 
 ```python:main.py
-def maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
-    max_depth = 0
+def diameter_of_binary_tree(root: Optional[TreeNode]) -> int:
+    max_length = 0
 
-    def dfs(node: Optional[TreeNode], depth=1):
-        nonlocal max_depth
+    def dfs(node: TreeNode):
+        nonlocal max_length
         if not node:
-            return
-        max_depth = max(max_depth, depth)
-        dfs(node.left, depth + 1)
-        dfs(node.right, depth + 1)
+            return 0
+        left = dfs(node.left)
+        right = dfs(node.right)
+        max_length = max(max_length, left + right)
+        return max(left, right) + 1
 
     dfs(root)
-    return answer
-```
-
-### Using BFS
-
-This solution uses BFS to traverse the binary tree level by level.
-By doing so, it computes the maximum depth by tracking the depth of each node as it is visited.
-
-```python:main.py
-from collections import deque
-from typing import Optional
-
-
-def maximum_depth_of_binary_tree(root: Optional[TreeNode]) -> int:
-    if not root:
-        return 0
-
-    depth = 0
-    queue = deque([root])
-
-    while queue:
-        depth += 1
-        level_length = len(queue)
-
-        for _ in range(level_length):
-            node = queue.popleft()
-
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
-
-    return depth
+    return max_length
 ```
 
 ## References
