@@ -1,0 +1,84 @@
+---
+title: 'Inverse Binary Tree'
+date: '2024-06-09'
+tags: ['python', 'algorithm', 'tree', 'DFS', 'BFS']
+draft: false
+summary: 'Given the root of a binary tree, invert the tree, and return its root.'
+---
+
+## Introduction
+Given the `root` of a binary tree, invert the tree, and return its root.
+
+```python:tree-node.py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+## Solutions
+
+### 1. Using BFS
+This solution inverts a binary tree using BFS It leverages `collections.deque` for efficient queue operations, 
+allowing for a straightforward, level-by-level traversal of the tree.
+```python:main.py
+from typing import Optional
+from data_structures import TreeNode
+from collections import deque
+
+
+def invert_binary_tree(root: Optional[TreeNode]) -> Optional[TreeNode]:
+    queue = deque([root])
+
+    while queue:
+        node = queue.popleft()
+
+        # swapping left and right in a top-down way
+        if node:
+            node.left, node.right = node.right, node.left
+
+            queue.append(node.left)
+            queue.append(node.right)
+    return root
+```
+
+### 2. Using DFS
+This solution inverts a binary tree using DFS with an explicit stack. 
+It demonstrates how DFS can be implemented iteratively, making use of a stack to manage nodes.
+```python:main.py
+from typing import Optional
+from data_structures import TreeNode
+from collections import deque
+
+
+def invert_binary_tree(root: Optional[TreeNode]) -> Optional[TreeNode]:
+    stack = deque([root])
+
+    while stack:
+        node = stack.pop()
+
+        if node:
+            node.left, node.right = node.right, node.left
+
+            stack.append(node.left)
+            stack.append(node.right)
+    return root
+```
+
+### 3. Using DFS("The Pythonic way")
+This solution inverts a binary tree using a recursive approach with DFS. 
+It's concise and elegant, showcasing the power of recursion in tree manipulation.
+```python:main.py
+def dfs(node: Optional[TreeNode]) -> Optional[TreeNode]:
+        if node:
+            node.left, node.right = dfs(node.right), dfs(node.left)
+            return node
+
+    return dfs(root)
+```
+
+## References
+
+- [Leetcode Inverse Binary Tree Problem](https://leetcode.com/problems/invert-binary-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
