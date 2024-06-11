@@ -24,47 +24,85 @@ class TreeNode:
         self.right = right
 ```
 
+## Things you should know
+### 1. Mapping binary tree to list
+
+![Phone Keypad](/static/images/algorithm/binary-tree-array-representation.png)
+When mapping a binary tree to a list, you generally skip the first index (`0`).
+This is done because it makes it easier to calculate the indices of parent and child nodes.
+Specifically, for a node at index `i`:
+    - The left child is at index `2*i`
+    - The right child is at index `2*i + 1`
+
 ## Solutions
 
 ### 1. Using BFS
+In this solution, we leverage the BFS algorithm to serialize and deserialize a binary tree. 
+The `deque` from Python's collections module is used to efficiently manage the nodes during both processes. 
+Below is the complete implementation:
+
+Note that in my solution, empty nodes(literally nodes that do not exist) are serialized into the string `#`. You can choose whatever character you'd like.
+
 ```python:main.py
 class Codec:
     def serialize(self, root: Optional[TreeNode]) -> str:
+        # Initialize deque with root node.
         queue = deque([root])
-        result = ['#']
 
+        # 'result' has one dummy entry to skip the first index.
+        result = ['#']
+        
+        # Perform BFS to serialize the tree.
         while queue:
             node = queue.popleft()
             if node:
+                # Append left and right children to the queue.
                 queue.append(node.left)
                 queue.append(node.right)
 
+                # Append current node value to the result.
                 result.append(str(node.val))
             else:
+                # Append '#' to the result if the node is None.
                 result.append('#')
+        
+        # Join all elements in the result list with a space and return as string.
         return ' '.join(result)
 
     def deserialize(self, data: str) -> Optional[TreeNode]:
+        # Edge case: if data is empty or only contains the root placeholder.
         if not data or data == '# #':
             return None
+        
+        # Split the data string into a list of node values.
         nodes = data.split()
+        
+        # Initialize the root node with the value at index 1.
         root = TreeNode(int(nodes[1]))
+        
+        # Initialize a queue with the root node.
         queue = deque([root])
+        
+        # Start from index 2 since index 0 is a dummy and index 1 is the root.
         index = 2
 
+        # Perform BFS to deserialize the tree.
         while queue:
             node = queue.popleft()
 
+            # Process the left child.
             if index < len(nodes) and nodes[index] != '#':
                 node.left = TreeNode(int(nodes[index]))
                 queue.append(node.left)
             index += 1
 
+            # Process the right child.
             if index < len(nodes) and nodes[index] != '#':
                 node.right = TreeNode(int(nodes[index]))
                 queue.append(node.right)
             index += 1
 
+        # Return the reconstructed root node.
         return root
 ```
 
@@ -72,3 +110,4 @@ class Codec:
 
 - [Leetcode Serialize & Deserialize Binary Tree Problem](https://leetcode.com/problems/merge-two-binary-trees)
 - [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
+- [Binary tree array representation image](https://inst.eecs.berkeley.edu/~cs61b/sp20/materials/lab/lab9/index.html)
