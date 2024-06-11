@@ -1,0 +1,73 @@
+---
+title: 'Merge Two Binary Trees'
+date: '2024-06-10'
+tags: ['python', 'algorithm', 'tree', 'DFS']
+draft: false
+summary: 'You are given two binary trees root1 and root2. Return the merged tree.'
+---
+
+## Introduction
+You are given two binary trees `root1` and `root2`. 
+Imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not.
+You need to merge the two trees into a new binary tree.
+The merge rule is that if two nodes overlap, then sum node values up as the new value of the merged node.
+Otherwise, the NOT null node will be used as the node of the new tree.
+Return the merged tree.
+Note: The merging process must start from the root nodes of both trees.
+
+```python:tree-node.py
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+## Solutions
+
+### 1. Using DFS
+This solution uses DFS to merge two binary trees. 
+The function dfs recursively traverses both trees, node by node, 
+and creates a new tree where each node's value is the sum of the corresponding nodes' values from the input trees. 
+If a node exists in one tree but not the other, its value is taken as `0` for the missing tree. 
+
+```python:main.py
+def merge_two_binary_trees(root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
+    def dfs(node1: Optional[TreeNode], node2: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not node1 and not node2:
+            return None
+        node1_value, node2_value = 0, 0
+        if node1:
+            node1_value = node1.val
+        if node2:
+            node2_value = node2.val
+
+        left = dfs(node1.left if node1 else None, node2.left if node2 else None)
+        right = dfs(node1.right if node1 else None, node2.right if node2 else None)
+
+        return TreeNode(node1_value + node2_value, left, right)
+
+    return dfs(root1, root2)
+```
+
+### 2. Using DFS, but better
+This improved solution still uses DFS but with a more streamlined approach. 
+Instead of handling each node's existence separately, 
+it leverages Python's truthy/falsy evaluation to simplify the code. 
+
+```python:main.py
+def merge_two_binary_trees(root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
+    def dfs(node1: Optional[TreeNode], node2: Optional[TreeNode]) -> Optional[TreeNode]:
+        if node1 and node2:
+            return TreeNode(node1.val + node2.val,
+                            left=dfs(node1.left, node2.left),
+                            right=dfs(node1.right, node2.right))
+        else:
+            return node1 or node2
+    return dfs(root1, root2)
+```
+
+## References
+
+- [Leetcode Merge Two Binary Trees Problem](https://leetcode.com/problems/merge-two-binary-trees)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
