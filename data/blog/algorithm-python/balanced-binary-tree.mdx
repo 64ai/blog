@@ -18,37 +18,71 @@ class TreeNode:
         self.left = left
         self.right = right
 ```
+## Things you should know
+### 1. Terminology in Tree Data Structure.
+* **Neighbor**: A parent or child node.
+* **Ancestor**: A node reachable by repeatedly proceeding from child to parent.
+* **Descendant**: A node reachable by repeatedly proceeding from parent to child. Also known as a subchild.
+* **Degree**: The number of children a node has. A leaf, by definition, has a degree of zero.
+* **Degree of Tree**: The maximum degree of any node in the tree.
+* **Distance**: The number of edges along the shortest path between two nodes.
+* **Level**: The number of edges along the unique path between a node and the root node. This is the same as `depth`.
+* **Width**: The number of nodes at a given level.
+* **Breadth**: The number of leaves in the tree.
+* **Forest**: A set of one or more disjoint trees.
+* **Ordered Tree**: A rooted tree in which an ordering is specified for the children of each vertex.
+* **Size of a Tree**: The total number of nodes in the tree.
 
 ## Solutions
 
 ### 1. Using DFS
-
+You can use `DFS` to recursively determine whether subtrees(left, right) are balanced or not.
+Once you find some node where `left_depth` and `right_depth` differ more than one,
+you set `is_balanced` variable to `False`. 
 
 ```python:main.py
 def balanced_binary_tree(root: Optional[TreeNode]) -> bool:
-    """
-    Given a binary tree, determine if it is height-balanced.
-    A height-balanced binary tree is a binary tree in which
-    the depth of the two subtrees of every node never differs by more than one.
-    """
     is_balanced = True
 
-    def get_depth(node: Optional[TreeNode]):
+    def dfs(node: Optional[TreeNode]):
         nonlocal is_balanced
+
+        if not node:
+            return 0
+        left_depth = dfs(node.left)
+        right_depth = dfs(node.right)
+
+        # It is unbalanced tree when the depth of the two subtrees differ more than one.
+        if abs(left_depth - right_depth) > 1:
+            is_balanced = False
+
+        return max(left_depth, right_depth) + 1
+
+    dfs(root)
+    return is_balanced
+```
+
+### 2. Using DFS, but Better
+You might be wondering, "Why continue traversing the tree if we've already discovered an imbalance?" 
+That's a great point. As soon as we identify a node with unbalanced subtrees, there's no need to proceed further.
+```python:main.py
+def balanced_binary_tree(root: Optional[TreeNode]) -> bool:
+    def get_depth(node: Optional[TreeNode]):
         if not node:
             return 0
         left_depth = get_depth(node.left)
         right_depth = get_depth(node.right)
-        if abs(left_depth - right_depth) > 1:
-            is_balanced = False
+
+        # If either subtree is unbalanced or current node's subtrees differ by more than 1, return -1
+        if left_depth == - 1 or right_depth == -1 or abs(left_depth - right_depth) > 1:
+            return -1
         return max(left_depth, right_depth) + 1
 
-    get_depth(root)
-    return is_balanced
+    return get_depth(root) != -1
 ```
 
 ## References
 
 - [Leetcode Balanced Binary Tree Problem](https://leetcode.com/problems/balanced-binary-tree)
 - [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
-- [Binary tree array representation image](https://inst.eecs.berkeley.edu/~cs61b/sp20/materials/lab/lab9/index.html)
+- [Terminology in Tree Data Structure](https://en.wikipedia.org/wiki/Tree_%28data_structure%29) 
