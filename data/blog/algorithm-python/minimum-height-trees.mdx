@@ -1,0 +1,69 @@
+---
+title: 'Minimum Height Trees'
+date: '2024-06-13'
+tags: ['python', 'algorithm', 'tree', 'DFS']
+draft: false
+summary: "Given a tree of n nodes, return a list of all MHT(Minimum Height Tree)s' root labels.'"
+---
+
+## Introduction
+A tree is **an undirected graph in which any two vertices are connected by exactly one path**. 
+In other words,
+any connected graph without simple cycles is a tree.
+
+Given a tree of n nodes labelled from `0` to `n - 1`, and an array of n - 1 edges where `edges[i] = [a(i), b(i)]` indicates
+that there is an undirected edge between the two nodes `a(i)` and `b(i)` in the tree, you can choose any node of the tree
+as the `root`. When you select a node x as the `root`, the result tree has height `h`. Among all possible rooted trees,
+those with minimum height (i.e. `min(h)`)  are called **minimum height trees** (MHTs).
+
+Return a list of all MHTs' root labels. You can return the answer in any order.
+(The height of a rooted tree is the number of edges on the longest downward path between the root and a leaf.)
+
+## Solutions
+
+### 1. "Trim the Leaves"
+
+```python:main.py
+from collections import defaultdict
+from typing import List
+
+
+def minimum_height_trees(n: int, edges: List[List[int]]) -> List[int]:
+    if n == 1:
+        return [0]
+    
+    # Build the graph
+    graph = defaultdict(list)
+    for source, dest in edges:
+        graph[source].append(dest)
+        graph[dest].append(source)
+    
+    # Initialize the first layer of leaves
+    leaves = [i for i in range(n) if len(graph[i]) == 1]
+    
+    remaining_nodes = n
+    while remaining_nodes > 2:
+        remaining_nodes -= len(leaves)
+        new_leaves = []
+        
+        # Remove the current leaves along with the edges
+        for leaf in leaves:
+            neighbor = graph[leaf].pop()
+            graph[neighbor].remove(leaf)
+            
+            # If the neighbor has become a leaf, add it to the new leaves
+            if len(graph[neighbor]) == 1:
+                new_leaves.append(neighbor)
+        
+        leaves = new_leaves
+    
+    # The remaining nodes are the roots of MHTs
+    return leaves
+```
+
+
+## References
+
+- [Leetcode Minimum Height Trees Problem](https://leetcode.com/problems/balanced-binary-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
+- [Terminology in Tree Data Structure](https://en.wikipedia.org/wiki/Tree_%28data_structure%29) 
