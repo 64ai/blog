@@ -1,7 +1,7 @@
 ---
 title: 'Minimum Height Trees'
 date: '2024-06-13'
-tags: ['python', 'algorithm', 'tree', 'DFS']
+tags: ['python', 'algorithm', 'tree']
 draft: false
 summary: "Given a tree of n nodes, return a list of all MHT(Minimum Height Tree)s' root labels.'"
 ---
@@ -22,6 +22,9 @@ Return a list of all MHTs' root labels. You can return the answer in any order.
 ## Solutions
 
 ### 1. "Trim the Leaves"
+- **Edge Case Handling**: If `n` is `1`, the tree consists of a single node, which is trivially the root of the MHT. In this case, simply return the single node.
+- **Trimming Leaves**: Begin by identifying all leaf nodes (nodes with only one connection). Iteratively remove these leaf nodes from the tree. As leaves are removed, update their neighboring nodes to reflect the loss of a connection. If a neighboring node becomes a leaf after removing a leaf, it is added to the new list of leaves.
+- **Remaining Nodes**: Continue this process of trimming leaves layer by layer until only one or two nodes remain. These remaining nodes are the roots of the MHTs, as they are centrally located, minimizing the maximum distance to any other node in the tree.
 
 ```python:main.py
 from collections import defaultdict
@@ -64,6 +67,5 @@ def minimum_height_trees(n: int, edges: List[List[int]]) -> List[int]:
 
 ## References
 
-- [Leetcode Minimum Height Trees Problem](https://leetcode.com/problems/balanced-binary-tree)
+- [Leetcode Minimum Height Trees Problem](https://leetcode.com/problems/minimum-height-trees)
 - [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
-- [Terminology in Tree Data Structure](https://en.wikipedia.org/wiki/Tree_%28data_structure%29) 
