@@ -1,0 +1,36 @@
+---
+title: 'Convert Sorted Array to Binary Search Tree'
+date: '2024-06-14'
+tags: ['python', 'algorithm', 'tree', 'Binary search tree']
+draft: false
+summary: "Given an integer array nums where the elements are sorted in ascending order, convert it to a height-balanced binary search tree."
+---
+
+## Introduction
+Given an integer array `nums` where the elements are sorted in **ascending order**, convert _it to a **height-balanced** binary search tree_.
+A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+
+## Solutions
+### 1. insert name
+You can just dive right in because the given list is already sorted.
+Thanks to list slicing, this problem can be solved efficiently and elegantly. 
+By consistently selecting the middle element and recursively slicing the list, 
+you can build the binary search tree in a manner similar to traversing it.
+
+```python:main.py
+def sorted_array_to_bst(nums: List[int]) -> Optional[TreeNode]:
+    if not nums:
+        return None
+
+    mid = len(nums) // 2
+    node = TreeNode(nums[mid])
+    node.left = sorted_array_to_bst(nums[:mid])
+    node.right = sorted_array_to_bst(nums[mid + 1:])
+    return node
+```
+
+
+## References
+
+- [Leetcode Convert Sorted Array to Binary Search Tree Problem](https://leetcode.com/problems/balanced-binary-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
