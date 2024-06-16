@@ -1,0 +1,48 @@
+---
+title: 'Binary Search Tree to Greater Sum Tree'
+date: '2024-06-15'
+tags: ['python', 'algorithm', 'tree', 'DFS', 'Binary search tree']
+draft: false
+summary: "Given the root of a Binary Search Tree (BST), convert it to a Greater Sum Tree"
+---
+
+## Introduction
+Given the `root` of a Binary Search Tree (BST), convert it to a Greater Sum Tree 
+such that every key of the original BST is changed to the original key plus the sum of all keys greater than the original key in BST.
+
+As a reminder, a binary search tree is a tree that satisfies these constraints:
+- The left subtree of a node contains only nodes with keys **less than** the node's key.
+- The right subtree of a node contains only nodes with keys **greater than** the node's key.
+- Both the left and right subtrees must also be binary search trees.
+
+## Solutions
+### 1. Using DFS(reverse in-order)
+To solve the problem of converting a BST to a Greater Sum Tree (GST), 
+we need to transform each node's value to be the sum of its original value plus the sum of all node values greater than the original value in the BST. 
+This can be efficiently done using a `reverse in-order traversal` (right-root-left), as this ensures that we visit nodes in decreasing order of their values.
+
+```python:main.py
+def bst_to_gst(root: TreeNode) -> TreeNode:
+    def dfs(node: TreeNode, acc=0):
+        if not node:
+            return acc
+        # Traverse the right subtree first
+        acc = dfs(node.right, acc)
+
+        # Update the current node's value with the accumulated sum
+        acc += node.val
+        node.val = acc
+
+        # Traverse the left subtree
+        acc = dfs(node.left, acc)
+        return acc
+
+    dfs(root)
+    return root
+```
+
+
+## References
+
+- [Leetcode Binary Search Tree to Greater Sum Tree Problem](https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
