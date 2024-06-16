@@ -31,6 +31,47 @@ def range_sum_of_bst(root: Optional[TreeNode], low: int, high: int) -> int:
     return dfs(root)
 ```
 
+### 2. Using DFS(Stack)
+This approach uses an iterative DFS with a stack to avoid recursion and efficiently traverse the tree.
+
+```python:main.py
+def range_sum_of_bst(root: Optional[TreeNode], low: int, high: int) -> int:
+    total = 0
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        if node:
+            if node.val < low:
+                stack.append(node.right)
+            elif high < node.val:
+                stack.append(node.left)
+            else:
+                total += node.val
+                stack.append(node.left)
+                stack.append(node.right)
+    return total
+```
+
+### 3. Using BFS(Queue)
+This approach uses BFS technique with a queue to traverse the tree level by level.
+```python:main.py
+def range_sum_of_bst(root: Optional[TreeNode], low: int, high: int) -> int:
+    total = 0
+    queue = collections.deque([root])
+    while queue:
+        node = queue.popleft()
+        if node:
+            if node.val < low:
+                queue.append(node.right)
+            elif high < node.val:
+                queue.append(node.left)
+            else:
+                total += node.val
+                queue.append(node.left)
+                queue.append(node.right)
+    return total
+```
+
 ## References
 
 - [Leetcode Range Sum of BST Problem](https://leetcode.com/problems/range-sum-of-bst)
