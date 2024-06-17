@@ -1,0 +1,65 @@
+---
+title: 'Minimum Distance between DST nodes'
+date: '2024-06-17'
+tags: ['python', 'algorithm', 'tree', 'DFS', 'Binary search tree']
+draft: false
+summary: "Given the root of a Binary Search Tree (BST), return the minimum difference between the values of any two different nodes in the tree."
+---
+
+## Introduction
+Given the `root` of a Binary Search Tree (BST), return the minimum difference between the values of **any two different nodes** in the tree.
+
+## Solutions
+### 1. Using DFS(Recursion)
+This solution uses a recursive in-order traversal to find the minimum distance between nodes in the BST. 
+In-order traversal ensures that nodes are processed in sorted order.
+```python:main.py
+def minimum_distance_between_bst_nodes(root: Optional[TreeNode]) -> int:
+    answer = float('int')
+    prev = -float('int') # Initialize to negative infinity to handle first node comparison
+
+    def in_order_traverse(node: Optional[TreeNode]):
+        nonlocal answer, prev
+        if node:
+            # Traverse left subtree
+            in_order_traverse(node.left)
+            
+            # Update the minimum difference
+            answer = min(answer, node.val - prev)
+            
+            # Update previous node value
+            prev = node.val
+            
+            # Traverse right subtree
+            in_order_traverse(node.right)
+
+    in_order_traverse(root)
+    return int(answer)
+```
+
+### 2. Using DFS(Stack)
+This solution uses an iterative in-order traversal with a stack to find the minimum distance between nodes in the BST. 
+This approach avoids recursion by using a stack to simulate the call stack.
+```python:main.py
+def minimum_distance_between_bst_nodes(root: Optional[TreeNode]) -> int:
+    answer = float('inf')
+    prev = -float('inf')
+    stack = []
+    node = root
+    while stack or node:
+        while node:
+            stack.append(node)
+            node = node.left
+        node = stack.pop()
+        answer = min(answer, node.val - prev)
+        prev = node.val
+        node = node.right
+
+    return answer
+```
+
+
+## References
+
+- [Leetcode Minimum Distance between DST nodes Problem](https://leetcode.com/problems/minimum-distance-between-dst-nodes)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
