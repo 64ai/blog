@@ -1,0 +1,54 @@
+---
+title: 'K-th Largest Element in an array'
+date: '2024-06-19'
+tags: ['python', 'algorithm', 'tree', 'DFS', 'Binary search tree']
+draft: false
+summary: "Given an integer array nums and an integer k, return the kth largest element in the array."
+---
+
+## Introduction
+Given an integer array `nums` and an integer `k`, return the `k-th` largest element in the array.
+Note that it is the `k-th` largest element in the sorted order, not the `k-th` distinct element.
+Can you solve it without sorting?
+
+## Solutions
+### 1. Using heapq
+This method converts the min-heap implementation of `heapq` to a max-heap by pushing negative values. 
+This approach is necessary because the Python standard library only provides a min-heap implementation. 
+
+```python:main.py
+def find_kth_largest(nums: List[int], k: int) -> int:
+    heap = list()
+    
+    for n in nums:
+        heapq.heappush(heap, -n)
+    for _ in range(k):
+        heapq.heappop()
+    return -heapq.heappop()
+```
+
+### 2. Using heapq.heapify
+This method converts the list into a heap using `heapq.heapify`, which rearranges the elements into a heap in $$O(n)$$ time. 
+Then, it removes the smallest elements **until only k elements remain**. The next pop gives the k-th largest element.
+
+```python:main.py
+def find_kth_largest(nums: List[int], k: int) -> int:
+    heapq.heapify(nums)
+    for _ in range(len(nums) - k):
+        heapq.heappop(nums)
+    return heapq.heappop(nums)
+```
+
+### 3. Using heapq.nlargest
+This method directly uses the `nlargest` function from `heapq`, 
+which returns a list of the k largest elements in descending order. 
+```python:main.py
+def find_kth_largest(nums: List[int], k: int) -> int:
+    return heapq.nlargest(k, nums)[-1]
+```
+
+
+## References
+
+- [Leetcode K-th Largest Element in an array Problem](https://leetcode.com/problems/kth-larget-element-in-an-array)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
