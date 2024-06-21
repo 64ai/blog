@@ -1,0 +1,57 @@
+---
+title: 'Palindrome Pairs'
+date: '2024-06-21'
+tags: ['python', 'algorithm', 'tree', 'Trie']
+draft: true
+summary: "A trie(prefix tree) is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. Implement the Trie class."
+---
+
+## Introduction
+You are given a **0-indexed** array of **unique** strings `words`.
+A **palindrome pair** is a pair of integers `(i, j)` such that:
+- `0 <= i, j < words.length`
+- `i != j`, and 
+- `words[i] + words[j]` (the concatenation of the two strings) is a **palindrome**.
+Return an array of all the palindrome pairs of `words`.
+You must write an algorithm with `O(sum of words[i].length)` runtime complexity.
+
+## Things you should know
+### 1. list.extend
+To be added
+
+### 2. @staticmethod
+To be added
+
+## Solutions
+### 1. Using Brute-force
+This solution exhaustively checks every possible pair of words in the list to determine if their concatenation forms a palindrome. 
+The method is simple but inefficient, as it involves a double nested loop that results in a time complexity of 
+$$O(n^2)$$, where `n` is the number of words in the list. This approach is very naïve and not suitable for large datasets, so there must be more efficient solutions.
+
+```python:main.py
+def is_palindrome(word: str) -> bool:
+    return word == word[::-1]
+
+
+def palindrome_pairs(words: List[str]) -> List[List[int]]:
+    result = []
+    for i, word1 in enumerate(words):
+        for j, word2 in enumerate(words):
+            if i == j:
+                continue
+            if is_palindrome(word1 + word2):
+                result.append([i, j])
+    return result
+```
+
+### 2. Using Trie
+To be added
+```python:main.py
+
+```
+
+
+## References
+
+- [Leetcode Palindrome Pairs Problem](https://leetcode.com/problems/palindrome-pairs)
+- [파이썬 알고리즘 인터뷰(Python Algorithm Interview)](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=245495826)
