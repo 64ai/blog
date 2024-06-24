@@ -1,0 +1,112 @@
+---
+title: Using Sympy for Symbolic Computation in Python
+date: '2024-06-24'
+tags: ['AI', 'machine learning', 'deep learning', 'mathematics']
+draft: true
+summary: 
+---
+[SymPy](https://www.sympy.org/) is a Python library for symbolic mathematics. 
+It is a full-featured computer algebra system (CAS) 
+while keeping the code as simple as possible for comprehensibility and extensibility. 
+Whether you are solving algebraic equations, performing calculus, or performing matrix operations, SymPy has you covered.
+
+## Getting Started with SymPy
+To get started with SymPy, you'll first need to install it. If you haven't already installed SymPy, you can do so using pip:
+```shell:install_sympy
+$ pip install sympy
+```
+Did you install? let's dive right into it.
+
+
+## Importing SymPy
+First, import the necessary modules from SymPy:
+
+```python:main.py
+import sympy as sp
+```
+## Basic Symbolic Operations
+### Defining Symbols
+Symbols are the basic building blocks in SymPy. You can define symbols using the symbols function:
+
+```python:main.py
+x, y, z = sp.symbols('x y z')
+```
+
+Now `x`, `y`, and `z` are symbolic variables that can be used in expressions.
+
+### Basic Arithmetic
+You can perform arithmetic operations with these symbols just like you would with regular variables:
+```python:main.py
+expr = x + 2 * y - z
+print(expr) # Output: x + 2 * y - z
+```
+
+### Expanding and Factoring
+SymPy can `expand` and `factor` algebraic expressions. For example:
+```python:main.py
+expr = (x + y)**2
+expanded_expr = sp.expand(expr)
+factored_expr = sp.factor(expanded_expr)
+
+print(expanded_expr) # Output: x**2 + 2*x*y + y**2
+print(factored_expr) # Output: (x + y)**2
+```
+
+### Solving Equations
+SymPy can solve equations symbolically. The `solve` function is used for this purpose:
+```python:main.py
+solution = sp.solve(x ** 2 - 4, x)
+print(solution) # Output: [-2, 2]
+```
+
+## Calculus with SymPy
+### Differentiation
+You can compute derivatives using the `diff` function:
+```python:main.py
+f = x**3 + 2*x**2 + x + 1
+f_prime = sp.diff(f, x)
+print(f_prime) # Output: 3*x**2 + 4*x + 1
+```
+
+### Integration
+Similarly, you can perform integration using the `integrate` function:
+```python:main.py
+f = x**3 + 2*x**2 + x + 1
+integral = sp.integrate(f, x)
+print(integral) # Output: x**4/4 + 2*x**3/3 + x**2/2 + x
+```
+
+### Limits
+Calculating limits is straightforward with the `limit` function:
+```python:main.py
+limit_result = sp.limit(sp.sin(x) / x, x, 0)
+print(limit_result) # Output: 1
+```
+
+## plot
+With the help of [matplotlib](https://matplotlib.org/), you can plot various graphs, charts, and other visualizations.
+For instance, this example shows you the 3d representation of the function $$f(x, y) = 2x^3+3y^3$$
+```python:main.py
+from sympy import *
+from sympy.plotting import plot3d
+
+# Declare x and y to SymPy
+x, y = symbols('x y')
+
+# Now just use Python syntax to declare function
+f = 2 * x ** 3 + 3 * y ** 3
+
+# Calculate the partial derivatives for x and y
+dx_f = diff(f, x)
+dy_f = diff(f, y)
+
+print(dx_f)  # prints 6*x**2
+print(dy_f)  # prints 9*y**2
+
+# plot the function
+plot3d(f)
+```
+
+## And more!
+Beyond the examples shown here, there are many more things you can do with the SymPy library. 
+As we go through our AI/ML journey, we will use this powerful tool to assist with various mathematical computations and symbolic reasoning.
